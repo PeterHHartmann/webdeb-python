@@ -4,7 +4,7 @@ from bottle import run, get
 
 @get('/')
 def _():
-    return
+    return 'Hi'
 
 #####################################
 

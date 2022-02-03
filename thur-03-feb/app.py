@@ -104,6 +104,7 @@ def _(item_id):
     if not item_id:
         response.status = 400
         return 'item_id is missing'
+
     for item in items:
         if item["id"] == item_id:
             items.remove(item)

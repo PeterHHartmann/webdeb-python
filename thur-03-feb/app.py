@@ -108,9 +108,10 @@ def _(item_id):
     for item in items:
         if item["id"] == item_id:
             items.remove(item)
-            return f'item {item_id} has been deleted'
-    response.status = 400
-    return 'item not found'
+            return f'item: ({item_id}) has been deleted'
+
+    response.status = 404
+    return f'item: ({item_id}) not found'
 
 #####################################
 run(host='127.0.0.1', port=4444, debug=True, reloader=True)

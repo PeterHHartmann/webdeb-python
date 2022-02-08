@@ -1,6 +1,7 @@
 from bottle import run, get, post, delete, response, request
 import json
-import uuid;
+import uuid
+import re
 
 #####################################
 items = [
@@ -22,19 +23,19 @@ def _():
     return json.dumps(items)
 
 #####################################
+# @get('/test')
+# def _():
+#     user_phone = '12345678'
+#     if not re.match("^[1-9][0-9]{7}$", user_phone):
+#         return "not a valid phone"
+#     return 'congrats a valid phone'
+
 @get('/test')
 def _():
-    year = request.params['year']
-    school_name = request.params['school-name']
-    age = request.params['age']
-
-    # alternatively
-    # year = request.query['year']
-    # school_name = request.query['school-name']
-    # age = request.query['age']
-
-    response_text = f'Hi you are at {school_name}. The year is {year} and you are {age} years old'
-    return response_text
+    user_name = 'Peter'
+    if not re.match(r"^[a-zA-Z]{2,20}$", user_name):
+        return "not a valid name"
+    return 'congrats a valid name'
 
 #####################################
 @get('/friendly/brand/<brand_name>/color/<color>')
@@ -105,13 +106,18 @@ def _(item_id):
         response.status = 400
         return 'item_id is missing'
 
-    for item in items:
+    # for item in items:
+    #     if item["id"] == item_id:
+    #         items.remove(item)
+    #         return f'item: ({item_id}) has been deleted'
+
+    for index, item in enumerate(items):
         if item["id"] == item_id:
-            items.remove(item)
-            return f'item: ({item_id}) has been deleted'
+            items.pop(index)
+            return f'item: (id: {item_id}) has been deleted'
 
     response.status = 404
-    return f'item: ({item_id}) not found'
+    return f'item: (id: {item_id}) not found'
 
 #####################################
 run(host='127.0.0.1', port=4444, debug=True, reloader=True)

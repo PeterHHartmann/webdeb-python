@@ -1,0 +1,31 @@
+% include("header", title="Items")
+
+<main>
+
+  % if items == []:
+    <div>
+      Sorry, no items to show
+    </div>
+  % end
+
+  <div id="items">
+
+    % for item in items:
+      <div class="item">
+
+        <form action="/delete-item" method="POST">
+          <input name="item_id" type="hidden" value='{{ item["id"] }}'>
+          <div>name: {{ item["name"] }}</div>
+          <div>price: {{f'{item["price"]:.2f}'}}</div>
+          <button>🗑️</button>
+        </form>
+
+      </div>
+    % end
+
+  </div>
+
+</main>
+
+% include("footer")
+  

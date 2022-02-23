@@ -1,0 +1,26 @@
+% include('templates/header', title='Users')
+
+<main>
+
+    % if not users:
+        <div>
+            Sorry, no users to show
+        </div>
+    % end
+
+    <div id="users">
+        % for user in users:
+            <div class="user">
+                <div>
+                    username: {{ user['name'] }}
+                </div>
+                <div>
+                    email: {{ user['email'] }}
+                </div>
+            </div>
+        % end
+    </div>
+
+</main>
+
+% include('templates/footer')

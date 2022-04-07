@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/app.css"/>
+    <script src="index.js" defer></script>
+    <title>{{ get('title', 'oops...') }}</title>
+</head>
+<body>
+    <section class="modal" id="modal-mount">
+        <div class="modal-content" id="signup-modal">            
+            <h1>Sign up</h1>
+            <form id="signup-form">
+                <label for="signup-username">Username</label>
+                <input type="text" name="signup-username" id="signup-username">
+                <label for="signup-email">Email</label>
+                <input type="email" name="signup-email" id="signup-email">
+                <label for="signup-password">Password</label>
+                <input type="password" name="" id="signup-password">
+                <input type="submit" value="Sign up">
+            </form>
+        </div>
+        <div class="modal-content hidden" id="login-modal">            
+            <h1>Login</h1>
+            <form>
+                <label for="login-email">Email</label>
+                <input type="email" name="signup-email" id="login-email">
+                <label for="login-password">Password</label>
+                <input type="password" name="" id="login-password">
+                <input type="submit" value="Sign up" id="login-confirm">
+            </form>
+        </div>
+        <div class="modal-background" id="modal-bg"></div>
+    </section>
+    <nav>
+        <a href='/'>Home</a>
+        <a href='/users'>Users</a>
+        <a href='/items'>Items</a>
+        <a href='/signup' id="signup-btn">Sign up</a>
+        <a href='/login' id="login-btn">Login</a>
+    </nav>
+    <main>
+        Index
+    </main>
+    <footer>
+
+    </footer>
+</body>
+</html>

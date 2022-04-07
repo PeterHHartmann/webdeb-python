@@ -27,6 +27,8 @@ def _():
 @get('/signup')
 @view('signup')
 def _():
+    if request.query.get('error'):
+        return dict(error=request.query['error'])
     return
 
 @post('/signup')
@@ -34,7 +36,8 @@ def _():
     user_id = str(uuid4())
     user_email = request.forms.get('user_email')
     if not re.match(g.REGEX_EMAIL, user_email):
-        return redirect('/lol')
+        error_msg = "invalid email"
+        return redirect('/signup?error={error_msg}')
 
     user_name = request.forms.get('user_name')
     password = request.forms.get('password')

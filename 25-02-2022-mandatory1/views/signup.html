@@ -3,6 +3,13 @@
 <main>
   <form action="/signup" method="POST" class="signup">
     <input name="user_name" type="text" placeholder="name">
+    % try:
+      % if error == "invalid email":
+        <p>Please enter a valid email</p>
+      % end
+    % except: 
+
+    % end
     <input name="user_email" type="email" placeholder="email">
     <input name="password" type="password" placeholder="password">
     <button>Signup</button>

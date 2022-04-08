@@ -5,6 +5,7 @@ import g
 import re
 import json
 import bcrypt
+import jwt
 
 import db.database as db
 
@@ -21,6 +22,10 @@ def _():
 @get('/')
 @view('index')
 def _():
+    test = request.get_cookie('JWT')
+    print(test)
+    # decoded = jwt.decode(, 'secret', algorithms=['HS256'])
+    # print(decoded)
     return
 
 @post('/signup')
@@ -28,6 +33,9 @@ def _():
     user_id = str(uuid4())
     data = json.load(request.body)
     user_name = data.get('username')
+    if len(user_name.strip()) < 1:
+        response.status = 400
+        return dict(msg='Please enter a username')
 
     user_email = data.get('email')
     if not re.match(g.REGEX_EMAIL, user_email):
@@ -38,23 +46,27 @@ def _():
         response.status = 400
         return dict(msg='Password must be longer than 6 or shorter than 20 characters')
 
-    #TODO hash password
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(bytes(user_pwd, 'utf_8'), salt)
+
+    #TODO send confirmation email
+
     try:
-        db.users_post(
+        db.user_post(
                 dict(
                     user_id=user_id,
                     user_name=user_name,
                     user_email=user_email,
-                    user_pwd=user_pwd
+                    user_pwd=hashed
                 )
             )
     except Exception as e:
         print(e)
         response.status = 400
         if str(e) == 'UNIQUE constraint failed: users.user_name':
-            return dict(msg='username is taken')
+            return dict(msg='That username is taken')
         elif str(e) == 'UNIQUE constraint failed: users.user_email':
-            return dict(msg='email is taken')
+            return dict(msg='That email is already in use')
 
     return dict(
                     user_name=user_name,
@@ -63,32 +75,32 @@ def _():
 
 @post("/login")
 def _():
-    # VALIDATE
-    # FIRST THING: Always check if the vriable was passed in the form
-    if not request.forms.get('user_email'):
-        return redirect('/login?error=user_email')    
-    if not re.match(g.REGEX_EMAIL, request.forms.get('user_email')):
-        return redirect('/login?error=user_email')
+    data = json.load(request.body)
+    input_email = data.get('email')
+    if not input_email or len(input_email.strip()) < 1:
+        response.status = 400
+        return dict(msg='Please enter an email')
+    if not re.match(g.REGEX_EMAIL, input_email):
+        response.status = 400
+        return dict(msg='Please enter a valid email')
 
-    user_email = request.forms.get('user_email')
+    input_pwd = data.get('pwd')
+    if not input_pwd or len(input_pwd.strip()) < 1:
+        response.status = 400
+        return dict(msg='Please enter a password')
 
-    # FIRST THING: Always check if the variable was passed in the form
-    if not request.forms.get('user_password'):
-        return redirect(f'/login?error=user_password&user_email={user_email}')
-    if len(request.forms.get("user_password")) < 6:
-        return redirect(f'/login?error=user_password&user_email={user_email}')
-    if len(request.forms.get("user_password")) > 50:
-        return redirect(f'/login?error=user_password&user_email={user_email}')
-
-    password = request.forms.get('user_password')
-
-    for user in g.USERS:
-        if user['email'] == user_email:
-            if user['password'] == password:
-                # do JWT here
-                return redirect(f'/login-ok?user-name={user["name"]}')
-
-    return redirect("/login")
+    try:
+        result = json.loads(db.user_get(dict(user_email=input_email)))
+        if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result[0].get('user_pwd'), 'utf-8')):
+            response.status = 401
+            return dict(msg='Invalid email or password')
+        else:
+            encoded_jwt = jwt.encode({"username": result[0].get('user_name')}, "secret", algorithm="HS256")
+            cookie_opts = {'max_age': 3600 * 24 * 3}
+            response.set_cookie('JWT', encoded_jwt, 'secret', **cookie_opts)
+            return dict(users=['test'])
+    except Exception as ex:
+        print(ex)
 
 @error(404)
 @view('404')

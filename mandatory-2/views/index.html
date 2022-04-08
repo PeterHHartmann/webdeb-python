@@ -6,44 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/app.css"/>
     <script src="index.js" defer></script>
-    <title>{{ get('title', 'oops...') }}</title>
+    <title>Not Twitter</title>
 </head>
 <body>
-    <section class="modal" id="modal-mount">
-        <div class="modal-content" id="signup-modal">            
+    <section class="modal hidden" id="modal-mount">
+        <div class="modal-content hidden" id="signup-modal">            
             <h1>Sign up</h1>
             <form id="signup-form">
                 <label for="signup-username">Username</label>
-                <input type="text" name="signup-username" id="signup-username">
+                <input type="text" name="signup-username" id="signup-username" required>
                 <label for="signup-email">Email</label>
-                <input type="email" name="signup-email" id="signup-email">
+                <input type="email" name="signup-email" id="signup-email" required>
                 <label for="signup-password">Password</label>
-                <input type="password" name="" id="signup-password">
+                <input type="password" name="" id="signup-password" required>
                 <input type="submit" value="Sign up">
             </form>
         </div>
         <div class="modal-content hidden" id="login-modal">            
             <h1>Login</h1>
-            <form>
+            <form id="login-form">
                 <label for="login-email">Email</label>
-                <input type="email" name="signup-email" id="login-email">
+                <input type="text" name="login-email" id="login-email">
                 <label for="login-password">Password</label>
                 <input type="password" name="" id="login-password">
-                <input type="submit" value="Sign up" id="login-confirm">
+                <input type="submit" value="Login" id="login-confirm">
             </form>
         </div>
         <div class="modal-background" id="modal-bg"></div>
     </section>
-    <nav>
-        <a href='/'>Home</a>
-        <a href='/users'>Users</a>
-        <a href='/items'>Items</a>
-        <a href='/signup' id="signup-btn">Sign up</a>
-        <a href='/login' id="login-btn">Login</a>
-    </nav>
+
+    % # left
+
+    % # center
     <main>
-        Index
+        <nav class="left-side">
+            <div>Home</div>
+            <div>Explore</div>
+            <div>Notifications</div>
+            <div>Messages</div>
+            <div id="login-open">Login</div>
+            <div id="signup-open">Sign up</div>
+        </nav>
+        <div class="tweet-deck">
+            tweet deck
+        </div>
+        <nav class="right-side">
+            <div>Search bar</div>
+            <div>
+                <h2>Trends for you</h2>
+            </div>
+            <div>
+                <h2>Who to follow</h2>
+            </div>
+        </nav>
     </main>
+
+    % # right
+
     <footer>
 
     </footer>

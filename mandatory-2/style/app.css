@@ -47,15 +47,6 @@ main {
     position: fixed;
 }
 
-.fab.fa-twitter {
-    color:rgb(29, 155, 240);
-    font-size: 1.8rem;
-    margin: 0;
-    width: inherit;
-    border-radius: 100%;
-    text-align: center;
-}
-
 nav > .nav-links > a {
     display: flex;
     align-items: center;
@@ -68,6 +59,11 @@ nav > .nav-links > a {
 nav > .nav-links > .logo {
     width: min-content;
     margin-top: .275rem;
+}
+
+nav > .nav-links > .logo > svg {
+    fill: rgb(29, 155, 240);
+    width: 2rem;
 }
 
 nav > .nav-links > .nav-link {
@@ -228,11 +224,30 @@ nav > .auth-nav > .user-nav > img {
     border: unset;
 }
 
+.right-nav > .search-mount:focus {
+    background-color: wheat;
+}
+
 .right-nav > .search-mount > .search-bar {
+    display: flex;
+    gap: 1rem;
     border-radius: 10rem;
     color: rgba(0, 0, 0, 1);
     background: rgba(0, 100, 100, 0.05);
     padding: .5rem 1rem;
+}
+
+.right-nav > .search-mount > .search-bar svg{
+    fill: rgba(0, 0, 0, 0.7);
+    width: 1.2rem;
+}
+
+.right-nav > .search-mount > .search-bar input{
+    border: none;
+    background: none;
+    padding: .5rem 0;
+    font-size: 1rem;
+    outline: none;
 }
 
 .right-nav .trends-nav {

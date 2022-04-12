@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* border: 1px solid grey; */
 }
 
 body {
@@ -15,6 +14,10 @@ body {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 main {
     display: grid;
     grid-auto-flow: column;
@@ -24,98 +27,277 @@ main {
     height: 100vh;
 }
 
-/* .left-side {
-    position: fixed;
-    inset: 0;
-} */
+/* left side styling */
 
 .left-side {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.left-nav {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-items: center;
-    align-items: flex-start;
-    width: fit-content;
-    /* width: 100%; */
-    height: 100%;
-    margin: 0 0 0 auto;
-    padding: 2rem 1rem 2rem 1rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100vh;
+    padding: 0 1rem 1rem 1rem;
     z-index: 9;
     grid-column: 1;
+    position: fixed;
 }
 
-.tweet-deck {
-    grid-column: 2;
-    border-left: 1px solid rgb(230, 230, 230);
-    border-right: 1px solid rgb(230, 230, 230);
-    width: 600px;
-    height: 200vh;
+.fab.fa-twitter {
+    color:rgb(29, 155, 240);
+    font-size: 1.8rem;
+    margin: 0;
+    width: inherit;
+    border-radius: 100%;
+    text-align: center;
+}
+
+nav > .nav-links > a {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    border-radius: 4rem;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 4rem;
 }
 
-.right-side {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: flex-start;
-    width: fit-content;
-    height: 100%;
-    margin: auto 0 0 0 ;
-    padding: 2rem 1rem 2rem 1rem;
-    z-index: 9;
-    grid-column: 3;
+nav > .nav-links > .logo {
+    width: min-content;
+    margin-top: .275rem;
 }
 
-@media only screen and (max-width: 1021px) {
-    .right-side {
-        display: none;
-    }
-}
-
-.right-side > * {
-    background: rgb(240, 240, 240);
-    border: none;
-    border-radius: 2rem;
-}
-
-nav > * {
-    margin: .25rem 1rem;
+nav > .nav-links > .nav-link {
+    gap: 1.2rem;
+    margin: 0 3rem .3rem 0;
+    font-size: 1.275rem;
     white-space: nowrap;
     color: black;
     font-weight: 400;
 }
 
-/* main {
-    padding: 0 1rem;
-    width: 600px;
-    margin: auto;
-} */
-
-footer {
-    position: fixed; bottom: 0; left: 0;
-    width: 100%;
-    height: 0.5rem;
-    background: rgba(30, 160, 250, 1);
+nav > .nav-links > .logo:hover {
+    background-color: rgba(29, 155, 240, 0.1);
 }
 
-.item, .user {
-    width: 100;
-    background: rgba(30, 160, 250, 0.07);
+nav > .nav-links > a > svg {
+    width: 1.7rem;
+}
+
+nav > .nav-links > .new-tweet-btn {
+    border: none;
     padding: 1rem;
-    border-bottom: 2px solid rgba(30, 160, 250, 1);
+    color: white;
+    background-color: rgb(29, 155, 240);
+    font-size: 1.275rem;
+    font-weight: 400;
+    border-radius: 4rem;
+    margin: 0 3rem .3rem 0;
+    width: 14rem;
+}
+
+nav > .nav-links > .new-tweet-btn:hover {
+    background-color: rgb(19, 145, 230);
+    transition: all ease-in-out .1s;
+}
+
+nav > .nav-links > .new-tweet-btn > svg {
+    fill: white;
+    width: 1.4rem;
+    height: 1.4rem;
+    display: none;
+}
+
+nav > .auth-nav {
+    padding: .5rem;
+    border-radius: 4rem;
+}
+
+nav > .auth-nav > .user-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+nav > .auth-nav > .user-nav > .user-info {
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+nav > .auth-nav > .user-nav > .user-info > div:first-child {
+    font-weight: 500;
+    color: black;
+}
+
+nav > .auth-nav > .user-nav > img {
+    width: 3rem;
+    border-radius: 100%;
+}
+
+/* tweet deck / center content styling */
+
+.tweet-deck {
+    grid-column: 2;
+    border-left: 1px solid rgb(230, 230, 230);
+    border-right: 1px solid rgb(230, 230, 230);
+    /* width: calc(100% - 600px); */
+    width: 600px;
+    height: 200vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: 1rem 0; */
+}
+
+.tweet-deck > .deck-header {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-left: 1px solid rgb(230, 230, 230);
+    border-right: 1px solid rgb(230, 230, 230);
+    width: inherit;
+    padding: 0 1rem;
+}
+
+.tweet-deck > .deck-header > a {
+    font-size: 1.275rem;
+    font-weight: 700;
+    color: black;
+}
+
+.tweet-deck > .deck-header > svg {
+    width: 1.2rem;
+}
+
+.tweet-deck > .new-tweet {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgb(230, 230, 230);
+    margin-top: 50px;
+    padding: .5rem 0 1rem 0;
+}
+
+.tweet-deck > .new-tweet > img {
+    width: 3rem;
+    border-radius: 100%;
+}
+
+/* right side styling */
+
+.right-side {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.right-nav {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    padding: 0 0 1rem 2rem;
+    z-index: 9;
+    grid-column: 3;
+}
+
+.right-nav > *:not(.search-mount) {
+    background: rgba(0, 100, 100, 0.05);
+    border: none;
     border-radius: 1rem;
+    padding: 1rem 1rem 1rem 1rem;
+    margin-bottom: 1rem;
+    width: 300px;
 }
 
-.item form * {
-    margin-bottom: 1rem
+.right-nav > .search-mount {
+    z-index: 20;
+    width: inherit;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 0.3rem 0;
+    border: unset;
 }
 
-.item form button {
-    padding: .05rem 1rem
+.right-nav > .search-mount > .search-bar {
+    border-radius: 10rem;
+    color: rgba(0, 0, 0, 1);
+    background: rgba(0, 100, 100, 0.05);
+    padding: .5rem 1rem;
 }
+
+.right-nav .trends-nav {
+    margin-top: 0.7rem;
+}
+
+.right-nav .trends-nav > .trend {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.right-nav .trends-nav > .trend > div {
+    font-size: .825rem;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.right-nav .trends-nav > .trend > div > .trend-heading {
+    font-size: 1rem;
+    font-weight: 500;
+    color: black;
+}
+
+.right-nav .follows-nav > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.right-nav .follows-nav > div > img {
+    width: 3rem;
+    border-radius: 100%;
+}
+
+.right-nav .follows-nav > div > .user-info {
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.right-nav .follows-nav > div > .user-info > p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.right-nav .follows-nav > div > .user-info > p:first-child {
+    font-weight: 500;
+    color: black;
+}
+
+.right-nav .follows-nav > div > button {
+    border: none;
+    background: black;
+    color: white;
+    border-radius: 3rem;
+    padding: .5rem 1rem;
+    height: min-content;
+}
+
+/* authentication styling */
 
 .signup {
     display: flex;
@@ -137,6 +319,7 @@ footer {
     padding: .5rem 0;
 }
 
+/* modal styling */
 .modal {
     z-index: 10;
     position: fixed;
@@ -178,6 +361,59 @@ footer {
     color: red;
 }
 
+
+/* global style classes */
+
 .hidden {
     display: none !important;
+}
+
+.hoverable:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: all ease-in-out .1s;
+}
+
+.three-dots {
+    width: 1.325rem;
+    fill: rgba(0, 0, 0, 0.7);
+}
+
+/* media queries */
+
+@media only screen and (max-width: 1280px) {
+
+    nav > .nav-links > .nav-link {
+        margin-right: 0;
+    }
+
+    nav > .nav-links > .nav-link > p {
+        display: none;
+    }
+
+    nav > .nav-links > .new-tweet-btn {
+        margin-right: 0;
+        width: fit-content;
+    }
+
+    nav > .nav-links > .new-tweet-btn > span {
+        display: none;
+    }
+
+    nav > .nav-links > .new-tweet-btn > svg {
+        display: block;
+    }
+
+    nav > .auth-nav > .user-nav > svg {
+        display: none;
+    }
+    
+    nav > .auth-nav > .user-nav > .user-info {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1021px) {
+    .right-side {
+        display: none;
+    }
 }

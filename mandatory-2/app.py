@@ -1,3 +1,4 @@
+
 from uuid import uuid4
 from bottle import error, get, post, redirect, request, response, run, static_file, view
 import g
@@ -17,13 +18,21 @@ def _():
 def _():
     return static_file('index.js', root='js')
 
+@get('/images/<image_name>')
+def _(image_name):
+    return static_file(image_name, root='image')
+
 ### views
 @get('/')
 @view('index')
 def _():
-    test = request.get_cookie("web_token", secret="secret")
-    print(test)
-    return
+    try:
+        cookie = json.loads(request.get_cookie("JWT", secret="secret_info"))
+        decoded = jwt.decode(cookie, key="secret_jwt", algorithms=["HS256"])
+        print(decoded)
+        return decoded
+    except:
+        return
 
 @post('/signup')
 def _():
@@ -92,10 +101,14 @@ def _():
             response.status = 401
             return dict(msg='Invalid email or password')
         else:
-            encoded_jwt = jwt.encode({"username": result[0].get('user_name')}, "secret", algorithm="HS256")
+            payload = {
+                "user_name": result[0].get('user_name'),
+                "user_email": result[0].get('user_email')
+            }
+            encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
             print(encoded_jwt)
             cookie_opts = {'max_age': 3600 * 24 * 3, 'path':'/'}
-            response.set_cookie("web_token", json.dumps(encoded_jwt), "secret", **cookie_opts)
+            response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
             return
     except Exception as ex:
         print(ex)

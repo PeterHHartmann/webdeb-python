@@ -1,4 +1,3 @@
-from encodings import utf_8
 from uuid import uuid4
 from bottle import error, get, post, redirect, request, response, run, static_file, view
 import g
@@ -22,10 +21,8 @@ def _():
 @get('/')
 @view('index')
 def _():
-    test = request.get_cookie('JWT')
+    test = request.get_cookie("web_token", secret="secret")
     print(test)
-    # decoded = jwt.decode(, 'secret', algorithms=['HS256'])
-    # print(decoded)
     return
 
 @post('/signup')
@@ -96,9 +93,10 @@ def _():
             return dict(msg='Invalid email or password')
         else:
             encoded_jwt = jwt.encode({"username": result[0].get('user_name')}, "secret", algorithm="HS256")
-            cookie_opts = {'max_age': 3600 * 24 * 3}
-            response.set_cookie('JWT', encoded_jwt, 'secret', **cookie_opts)
-            return dict(users=['test'])
+            print(encoded_jwt)
+            cookie_opts = {'max_age': 3600 * 24 * 3, 'path':'/'}
+            response.set_cookie("web_token", json.dumps(encoded_jwt), "secret", **cookie_opts)
+            return
     except Exception as ex:
         print(ex)
 

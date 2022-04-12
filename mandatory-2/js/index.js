@@ -1,3 +1,8 @@
+const auto_grow = (element) => {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight)+"px";
+}
+
 const toggle_modal = (modal_id) => {
     document.getElementById(modal_id).classList.toggle('hidden');
 };

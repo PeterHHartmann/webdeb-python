@@ -7,6 +7,12 @@
     <script src="https://kit.fontawesome.com/c884ab5724.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/app.css"/>
     <script src="index.js" defer></script>
+    <!-- <script>
+        function auto_grow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight)+"px";
+        }
+    </script> -->
     <title>Not Twitter</title>
 </head>
 <body>
@@ -35,10 +41,6 @@
         </div>
         <div class="modal-background" id="modal-bg"></div>
     </section>
-
-    % # left
-
-    % # center
     <main>
         <div class="left-side">
             <nav class="left-nav">
@@ -96,6 +98,7 @@
                 </div>
             </nav>
         </div>
+
         <div class="tweet-deck">
             <div class="deck-header">
                 <a href="/">Home</a>
@@ -103,12 +106,13 @@
             </div>
             <div class="new-tweet">
                 <img src="/images/profile.jpg" alt="">
-                <h2>What's happening?</h2>
+                <form action="">
+                    <textarea oninput="auto_grow(this)" maxlength="280" rows="1" placeholder="What's happening?"></textarea>
+                </form>
             </div>
             <div>tweet deck</div>
         </div>
 
-        % # right
         <div class="right-side">
             <nav class="right-nav">
                 <div class="search-mount">
@@ -238,8 +242,5 @@
             </nav>
         </div>
     </main>
-
-
-
 </body>
 </html>

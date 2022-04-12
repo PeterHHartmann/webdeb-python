@@ -32,6 +32,8 @@ main {
 .left-side {
     display: flex;
     justify-content: flex-end;
+    /* position: sticky; */
+    /* height: 100vh; */
 }
 
 .left-nav {
@@ -44,7 +46,13 @@ main {
     padding: 0 1rem 1rem 1rem;
     z-index: 9;
     grid-column: 1;
-    position: fixed;
+    position: sticky;
+    top: 1px;
+}
+
+nav > .nav-links {
+    display: flex;
+    flex-direction: column;
 }
 
 nav > .nav-links > a {
@@ -88,8 +96,8 @@ nav > .nav-links > .new-tweet-btn {
     padding: 1rem;
     color: white;
     background-color: rgb(29, 155, 240);
-    font-size: 1.275rem;
-    font-weight: 400;
+    font-size: 1.2rem;
+    font-weight: 500;
     border-radius: 4rem;
     margin: 0 3rem .3rem 0;
     width: 14rem;
@@ -110,11 +118,11 @@ nav > .nav-links > .new-tweet-btn > svg {
 nav > .auth-nav {
     padding: .5rem;
     border-radius: 4rem;
+    width: 100%;
 }
 
 nav > .auth-nav > .user-nav {
     display: flex;
-    justify-content: space-between;
     gap: 1rem;
 }
 
@@ -140,24 +148,21 @@ nav > .auth-nav > .user-nav > img {
     grid-column: 2;
     border-left: 1px solid rgb(230, 230, 230);
     border-right: 1px solid rgb(230, 230, 230);
-    /* width: calc(100% - 600px); */
-    width: 600px;
+    width: clamp(400px, 100vw, 600px);
     height: 200vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* padding: 1rem 0; */
 }
 
 .tweet-deck > .deck-header {
-    position: fixed;
+    position: sticky;
+    inset: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 50px;
     background-color: rgba(255, 255, 255, 0.95);
-    border-left: 1px solid rgb(230, 230, 230);
-    border-right: 1px solid rgb(230, 230, 230);
     width: inherit;
     padding: 0 1rem;
 }
@@ -175,17 +180,35 @@ nav > .auth-nav > .user-nav > img {
 .tweet-deck > .new-tweet {
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
     border-bottom: 1px solid rgb(230, 230, 230);
-    margin-top: 50px;
-    padding: .5rem 0 1rem 0;
+    padding: .5rem 1rem 1rem 1rem;
 }
 
 .tweet-deck > .new-tweet > img {
     width: 3rem;
     border-radius: 100%;
+}
+
+.tweet-deck > .new-tweet > form {
+    width: calc(100% - 3rem - 1rem);
+}
+
+.tweet-deck > .new-tweet > form textarea {
+    display: flex;
+    justify-content: center;
+    border: none;
+    outline: none;
+    padding: 0.225rem 0;
+    font-size: 1.2rem;
+    width: 100%;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 1rem;
+    resize: none;
+    overflow: hidden;
+    min-height: 2rem;
+    border-bottom: 1px solid rgb(230, 230, 230);
 }
 
 /* right side styling */
@@ -428,6 +451,25 @@ nav > .auth-nav > .user-nav > img {
 }
 
 @media only screen and (max-width: 1021px) {
+
+    main {
+        /* margin: 0 1rem; */
+        grid-template-columns: 1fr 19fr;
+    }
+
+    .left-side .left-nav {
+        padding: 0;
+    }
+
+    .left-side .left-nav button {
+        margin: auto;
+    }
+
+    .tweet-deck {
+        max-width: calc(100% - 1rem);
+    }
+
+
     .right-side {
         display: none;
     }

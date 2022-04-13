@@ -1,0 +1,127 @@
+@use '../abstracts/media-query';
+
+.right-side {
+    display: flex;
+    justify-content: flex-start;
+
+    @include media-query.respond-to(1021px) {
+        display: none;
+    }
+
+    .right-nav {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        padding: 0 0 1rem 2rem;
+        z-index: 9;
+        grid-column: 3;
+
+        > * {
+            &:not(.search-mount) {
+                background: rgba(0, 100, 100, 0.05);
+                border: none;
+                border-radius: 1rem;
+                padding: 1rem 1rem 1rem 1rem;
+                margin-bottom: 1rem;
+                width: 300px;
+            }
+        }
+
+        .search-mount {
+            z-index: 20;
+            width: inherit;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 0.3rem 0;
+            border: unset;
+
+            .search-bar {
+                display: flex;
+                gap: 1rem;
+                border-radius: 10rem;
+                color: rgba(0, 0, 0, 1);
+                background: rgba(0, 100, 100, 0.05);
+                padding: .5rem 1rem;
+
+                svg{
+                    fill: rgba(0, 0, 0, 0.7);
+                    width: 1.2rem;
+                }
+
+                input{
+                    border: none;
+                    background: none;
+                    padding: .5rem 0;
+                    font-size: 1rem;
+                    outline: none;
+                }
+            }
+        }
+
+        .trends-nav {
+            margin-top: 0.7rem;
+
+            .trend {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                padding: 1rem 0;
+
+                div {
+                    font-size: .825rem;
+                    font-weight: 400;
+                    color: rgba(0, 0, 0, 0.7);
+
+                    .trend-heading {
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: black;
+                    }
+                }
+            }
+        }
+
+        .follows-nav {
+            > div {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                margin-top: 1.5rem;
+
+                img {
+                    width: 3rem;
+                    border-radius: 100%;
+                }
+                
+                .user-info {
+                    font-size: 1rem;
+                    font-weight: 400;
+                    color: rgba(0, 0, 0, 0.8);
+
+                    p {
+                        font-size: 1rem;
+                        font-weight: 400;
+                        color: rgba(0, 0, 0, 0.8);
+
+                        &:first-child {
+                            font-weight: 500;
+                            color: black;
+                        }
+                    }
+                }
+
+                button {
+                    border: none;
+                    background: black;
+                    color: white;
+                    border-radius: 3rem;
+                    padding: .5rem 1rem;
+                    height: min-content;
+                }
+            }
+        } 
+    }
+}

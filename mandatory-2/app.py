@@ -1,26 +1,27 @@
 
 from uuid import uuid4
-from bottle import error, get, post, redirect, request, response, run, static_file, view
+from bottle import error, get, post, redirect, request, response, run, static_file, view, TEMPLATE_PATH
 import g
 import re
 import json
 import bcrypt
 import jwt
-
 import db.database as db
 
-### static file routes
-@get('/app.css')
-def _():
-    return static_file('app.css', root='style')
+TEMPLATE_PATH.insert(0, 'public/views')
 
-@get('/index.js')
-def _():
-    return static_file('index.js', root='js')
+### static file routes
+@get('/style/<stylesheet_name>')
+def _(stylesheet_name):
+    return static_file(stylesheet_name, root='public/style')
+
+@get('/js/<script_name>')
+def _(script_name):
+    return static_file(script_name, root='public/javascript')
 
 @get('/images/<image_name>')
 def _(image_name):
-    return static_file(image_name, root='image')
+    return static_file(image_name, root='public/image')
 
 ### views
 @get('/')
@@ -28,10 +29,20 @@ def _(image_name):
 def _():
     try:
         cookie = json.loads(request.get_cookie("JWT", secret="secret_info"))
-        decoded = jwt.decode(cookie, key="secret_jwt", algorithms=["HS256"])
-        print(decoded)
-        return decoded
+        data = jwt.decode(cookie, key="secret_jwt", algorithms=["HS256"])
+        print(data)
+        return data
     except:
+        return redirect('/login')
+
+@get('/signup')
+@view('signup')
+def _():
+    try:
+        cookie = json.loads(request.get_cookie("JWT", secret="secret_info"))
+        if cookie:
+            return redirect('/')
+    except: 
         return
 
 @post('/signup')
@@ -79,7 +90,17 @@ def _():
                     user_email=user_email,
                 )
 
-@post("/login")
+@get('/login')
+@view('login')
+def _():
+    try:
+        cookie = json.loads(request.get_cookie("JWT", secret="secret_info"))
+        if cookie:
+            return redirect('/')
+    except: 
+        return
+
+@post('/login')
 def _():
     data = json.load(request.body)
     input_email = data.get('email')
@@ -95,8 +116,9 @@ def _():
         response.status = 400
         return dict(msg='Please enter a password')
 
-    try:
-        result = json.loads(db.user_get(dict(user_email=input_email)))
+    # try:
+    result = json.loads(db.user_get(dict(user_email=input_email)))
+    if result:
         if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result[0].get('user_pwd'), 'utf-8')):
             response.status = 401
             return dict(msg='Invalid email or password')
@@ -107,11 +129,19 @@ def _():
             }
             encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
             print(encoded_jwt)
-            cookie_opts = {'max_age': 3600 * 24 * 3, 'path':'/'}
+            cookie_opts = {'max_age': 3600 * 24 * 3}
             response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
             return
-    except Exception as ex:
-        print(ex)
+    else:
+        print("didn't find user")
+        response.status = 401
+        return dict(msg='Invalid email or password')
+
+@get('/logout')
+def _():
+    response.delete_cookie("JWT", secret="secret_info")
+    return redirect('/login')
+
 
 @error(404)
 @view('404')

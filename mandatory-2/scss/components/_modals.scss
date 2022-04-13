@@ -1,0 +1,40 @@
+.modal {
+    z-index: 10;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+
+    .modal-background {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .modal-content {
+        z-index: 11;
+        position: relative;
+        background-color: aqua;
+        max-width: 600px;
+        margin: 15% auto;
+        display: flex;
+        flex-direction: column;
+
+        h1 {
+            color: black;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 75%;
+            margin: auto;
+
+            .error_prompt {
+                color: red;
+            }
+        }
+    }
+}

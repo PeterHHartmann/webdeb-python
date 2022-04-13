@@ -1,0 +1,42 @@
+@use 'abstracts/media-query';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 300;
+    overflow: hidden;
+    overflow-y: scroll;
+    background: rgba(255, 255, 255, 1);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.hoverable {
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        transition: all ease-in-out .1s;
+    }
+}
+
+.activated {
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: all ease-in-out .1s;
+}
+
+.more-svg {
+    width: 1.325rem;
+    fill: rgba(0, 0, 0, 0.7);
+}

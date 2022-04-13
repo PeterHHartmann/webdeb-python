@@ -1,0 +1,99 @@
+@use 'global';
+
+.login-main, .signup-main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // justify-content: center;
+    background-color: rgba(150, 175, 200, 0.2);
+    padding: 4% 0;
+    
+    object {
+        width: clamp(40px, 20vw, 120px);
+        svg {
+            fill: rgb(29, 155, 240);
+        }
+    }
+
+    h1 {
+        margin: 0 1rem 2% 1rem;
+        text-align: center;
+    }
+
+    .login-container, .signup-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: fit-content;
+        background-color: white;
+        margin: 0 auto;
+        padding: 1% 2%;
+        border-radius: 3rem;
+        width: clamp(200px, calc(100vw - 2rem), 400px);
+        box-shadow: 0px .5rem 1rem  rgba(0, 25, 50, 0.3);
+
+        a {
+            margin-bottom: 1rem;
+            background: rgba(0, 100, 100, 0.1);
+            font-weight: 400;
+            padding: 1rem 1rem;
+            border-radius: 3rem;
+            color: black;
+            width: 60%;
+            text-align: center;
+        }
+
+        > form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            #error-container {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+
+                min-height: 1.2em;
+                span {
+                    color: rgb(207, 0, 0);
+                    font-weight: 400;
+                }
+            }
+
+            label {
+                margin: .5rem 0 0 .5rem;
+            }
+
+            input {
+                border: none;
+                outline: none;
+                background: rgba(0, 100, 100, 0.05);
+            }
+
+            input:not([type=submit]) {
+                font-size: 1.1rem;
+                margin: 0.5rem 0;
+                padding: .5rem 1rem;
+                border-radius: 3rem;
+            }
+
+            input[type=submit] {
+                font-size: 1.1rem;
+                margin: 0.5rem auto;
+                padding: 1rem 1rem;
+                width: fit-content;
+                border-radius: 3rem;
+                background: rgb(29, 155, 240);
+                color: white;
+                text-align: center;
+                width: 60%;
+                white-space: nowrap;
+            }
+
+        }   
+    }
+}

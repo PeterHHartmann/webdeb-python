@@ -1,0 +1,168 @@
+@use '../abstracts/media-query';
+
+.left-side {
+    display: flex;
+    justify-content: flex-end;
+
+    .left-nav {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        height: 100vh;
+        padding: 0 1rem 1rem 1rem;
+        z-index: 9;
+        grid-column: 1;
+        position: sticky;
+        top: 0;
+
+        @include media-query.respond-to(1021px) {
+            padding: 0;
+
+            button {
+                margin: auto;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+    
+            a {
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                padding: 1rem;
+                border-radius: 4rem;
+                gap: 1.2rem;
+                margin: 0 3rem .3rem 0;
+                font-size: 1.275rem;
+                white-space: nowrap;
+                color: black;
+                font-weight: 400;
+    
+                @include media-query.respond-to(1280px) {
+                    margin-right: 0;
+    
+                    p {
+                        display: none;
+                    }
+                }
+        
+                &.logo {
+                    width: min-content;
+                    margin-top: .275rem;
+        
+                    &:hover {
+                        background-color: rgba(29, 155, 240, 0.1);
+                    }
+        
+                    svg {
+                        fill: rgb(29, 155, 240);
+                        width: 2rem;
+                    }
+                }
+        
+                svg {
+                    width: 1.7rem;
+                }
+            }
+        
+            .new-tweet-btn {
+                border: none;
+                padding: 1rem;
+                color: white;
+                background-color: rgb(29, 155, 240);
+                font-size: 1.2rem;
+                font-weight: 500;
+                border-radius: 4rem;
+                margin: 0 3rem .3rem 0;
+                width: 14rem;
+                cursor: pointer;
+                
+                &:hover {
+                    background-color: rgb(19, 145, 230);
+                    transition: all ease-in-out .1s;
+                }
+    
+                @include media-query.respond-to(1280px) {
+                    margin-right: 0;
+                    margin-left: 0.285rem;
+                    width: fit-content;
+                    
+                    span {
+                        display: none;
+                    }
+    
+                    svg {
+                        display: block !important;
+                    }
+                }
+    
+                svg {
+                    fill: white;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    display: none;
+                }
+            }
+        }
+    
+        .auth-nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            border-radius: 2rem;
+
+            #logout-dropup {
+                display: flex;
+                justify-content: center;
+                padding: 1rem 1rem;
+
+                a {
+                    padding: 1rem 2rem;
+                    border-radius: 2rem;
+                    font-size: 1rem;
+                    color: white;
+                    background: rgba(0, 0, 0, 0.8);
+                    font-weight: 400;
+                    cursor: pointer;
+                }
+            }
+
+            .user-nav {
+                display: flex;
+                gap: 1rem;
+                padding: .5rem;
+                border-radius: 4rem;
+
+                @include media-query.respond-to(1280px) {
+                    svg {
+                        display: none;
+                    }
+                }
+    
+                .user-info {
+                    font-size: 1rem;
+                    font-weight: 400;
+                    color: rgba(0, 0, 0, 0.8);
+    
+                    @include media-query.respond-to(1280px) {
+                        display: none;
+                    }
+    
+                    div:first-child {
+                        font-weight: 500;
+                        color: black;
+                    }
+                }
+    
+                img {
+                    width: 3rem;
+                    border-radius: 100%;
+                }
+            }
+        }
+    }
+}

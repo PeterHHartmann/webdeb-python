@@ -1,0 +1,411 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 300;
+  overflow: hidden;
+  overflow-y: scroll;
+  background: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hoverable:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: all ease-in-out 0.1s;
+}
+
+.activated {
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: all ease-in-out 0.1s;
+}
+
+.more-svg {
+  width: 1.325rem;
+  fill: rgba(0, 0, 0, 0.7);
+}
+
+.left-side {
+  display: flex;
+  justify-content: flex-end;
+}
+.left-side .left-nav {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100vh;
+  padding: 0 1rem 1rem 1rem;
+  z-index: 9;
+  grid-column: 1;
+  position: sticky;
+  top: 0;
+}
+@media (max-width: 1021px) {
+  .left-side .left-nav {
+    padding: 0;
+  }
+  .left-side .left-nav button {
+    margin: auto;
+  }
+}
+.left-side .left-nav .nav-links {
+  display: flex;
+  flex-direction: column;
+}
+.left-side .left-nav .nav-links a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 1rem;
+  border-radius: 4rem;
+  gap: 1.2rem;
+  margin: 0 3rem 0.3rem 0;
+  font-size: 1.275rem;
+  white-space: nowrap;
+  color: black;
+  font-weight: 400;
+}
+@media (max-width: 1280px) {
+  .left-side .left-nav .nav-links a {
+    margin-right: 0;
+  }
+  .left-side .left-nav .nav-links a p {
+    display: none;
+  }
+}
+.left-side .left-nav .nav-links a.logo {
+  width: min-content;
+  margin-top: 0.275rem;
+}
+.left-side .left-nav .nav-links a.logo:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+}
+.left-side .left-nav .nav-links a.logo svg {
+  fill: #1d9bf0;
+  width: 2rem;
+}
+.left-side .left-nav .nav-links a svg {
+  width: 1.7rem;
+}
+.left-side .left-nav .nav-links .new-tweet-btn {
+  border: none;
+  padding: 1rem;
+  color: white;
+  background-color: #1d9bf0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border-radius: 4rem;
+  margin: 0 3rem 0.3rem 0;
+  width: 14rem;
+  cursor: pointer;
+}
+.left-side .left-nav .nav-links .new-tweet-btn:hover {
+  background-color: #1391e6;
+  transition: all ease-in-out 0.1s;
+}
+@media (max-width: 1280px) {
+  .left-side .left-nav .nav-links .new-tweet-btn {
+    margin-right: 0;
+    margin-left: 0.285rem;
+    width: fit-content;
+  }
+  .left-side .left-nav .nav-links .new-tweet-btn span {
+    display: none;
+  }
+  .left-side .left-nav .nav-links .new-tweet-btn svg {
+    display: block !important;
+  }
+}
+.left-side .left-nav .nav-links .new-tweet-btn svg {
+  fill: white;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: none;
+}
+.left-side .left-nav .auth-nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 2rem;
+}
+.left-side .left-nav .auth-nav #logout-dropup {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1rem;
+}
+.left-side .left-nav .auth-nav #logout-dropup a {
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.8);
+  font-weight: 400;
+  cursor: pointer;
+}
+.left-side .left-nav .auth-nav .user-nav {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-radius: 4rem;
+}
+@media (max-width: 1280px) {
+  .left-side .left-nav .auth-nav .user-nav svg {
+    display: none;
+  }
+}
+.left-side .left-nav .auth-nav .user-nav .user-info {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.8);
+}
+@media (max-width: 1280px) {
+  .left-side .left-nav .auth-nav .user-nav .user-info {
+    display: none;
+  }
+}
+.left-side .left-nav .auth-nav .user-nav .user-info div:first-child {
+  font-weight: 500;
+  color: black;
+}
+.left-side .left-nav .auth-nav .user-nav img {
+  width: 3rem;
+  border-radius: 100%;
+}
+
+.tweet-deck {
+  grid-column: 2;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  width: clamp(400px, 100vw, 600px);
+  height: 200vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (max-width: 1021px) {
+  .tweet-deck {
+    width: clamp(320px, 100vw, calc(100% - 1rem));
+  }
+}
+.tweet-deck .deck-header {
+  position: sticky;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.95);
+  width: calc(100% - 2px);
+  padding: 0 1rem;
+}
+.tweet-deck .deck-header a {
+  font-size: 1.275rem;
+  font-weight: 700;
+  color: black;
+}
+.tweet-deck .deck-header svg {
+  width: 1.2rem;
+}
+.tweet-deck .new-tweet {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+.tweet-deck .new-tweet img {
+  width: 3rem;
+  border-radius: 100%;
+}
+.tweet-deck .new-tweet form {
+  width: calc(100% - 3rem - 1rem);
+}
+.tweet-deck .new-tweet form textarea {
+  display: flex;
+  justify-content: center;
+  border: none;
+  outline: none;
+  padding: 0.225rem 0;
+  font-size: 1.2rem;
+  width: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 1rem;
+  resize: none;
+  overflow: hidden;
+  min-height: 2rem;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.right-side {
+  display: flex;
+  justify-content: flex-start;
+}
+@media (max-width: 1021px) {
+  .right-side {
+    display: none;
+  }
+}
+.right-side .right-nav {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  padding: 0 0 1rem 2rem;
+  z-index: 9;
+  grid-column: 3;
+}
+.right-side .right-nav > *:not(.search-mount) {
+  background: rgba(0, 100, 100, 0.05);
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem 1rem 1rem 1rem;
+  margin-bottom: 1rem;
+  width: 300px;
+}
+.right-side .right-nav .search-mount {
+  z-index: 20;
+  width: inherit;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 0.3rem 0;
+  border: unset;
+}
+.right-side .right-nav .search-mount .search-bar {
+  display: flex;
+  gap: 1rem;
+  border-radius: 10rem;
+  color: black;
+  background: rgba(0, 100, 100, 0.05);
+  padding: 0.5rem 1rem;
+}
+.right-side .right-nav .search-mount .search-bar svg {
+  fill: rgba(0, 0, 0, 0.7);
+  width: 1.2rem;
+}
+.right-side .right-nav .search-mount .search-bar input {
+  border: none;
+  background: none;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  outline: none;
+}
+.right-side .right-nav .trends-nav {
+  margin-top: 0.7rem;
+}
+.right-side .right-nav .trends-nav .trend {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+.right-side .right-nav .trends-nav .trend div {
+  font-size: 0.825rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+}
+.right-side .right-nav .trends-nav .trend div .trend-heading {
+  font-size: 1rem;
+  font-weight: 500;
+  color: black;
+}
+.right-side .right-nav .follows-nav > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.right-side .right-nav .follows-nav > div img {
+  width: 3rem;
+  border-radius: 100%;
+}
+.right-side .right-nav .follows-nav > div .user-info {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.8);
+}
+.right-side .right-nav .follows-nav > div .user-info p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.8);
+}
+.right-side .right-nav .follows-nav > div .user-info p:first-child {
+  font-weight: 500;
+  color: black;
+}
+.right-side .right-nav .follows-nav > div button {
+  border: none;
+  background: black;
+  color: white;
+  border-radius: 3rem;
+  padding: 0.5rem 1rem;
+  height: min-content;
+}
+
+.modal {
+  z-index: 10;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.modal .modal-background {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100vw;
+  height: 100vh;
+}
+.modal .modal-content {
+  z-index: 11;
+  position: relative;
+  background-color: aqua;
+  max-width: 600px;
+  margin: 15% auto;
+  display: flex;
+  flex-direction: column;
+}
+.modal .modal-content h1 {
+  color: black;
+}
+.modal .modal-content form {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin: auto;
+}
+.modal .modal-content form .error_prompt {
+  color: red;
+}
+
+.home-main {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 3fr 4fr 3fr;
+  margin: auto;
+  max-width: 1100px;
+  height: 100vh;
+}
+@media (max-width: 1021px) {
+  .home-main {
+    grid-template-columns: 1fr 19fr;
+  }
+}
+
+/*# sourceMappingURL=index.css.map */

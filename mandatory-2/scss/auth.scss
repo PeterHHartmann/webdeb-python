@@ -1,6 +1,6 @@
 @use 'global';
 
-.login-main, .signup-main {
+.login-main, .signup-main, .validation-main {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -22,7 +22,7 @@
         text-align: center;
     }
 
-    .login-container, .signup-container {
+    .login-container, .signup-container, .validation-container {
         display: flex;
         flex-direction: column;
         justify-content: center;

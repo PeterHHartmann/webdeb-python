@@ -5,10 +5,9 @@ const remove_errors = (id) => {
     }
 }
 
-document.getElementById('login-form').addEventListener('submit', async (e) => {
+document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    console.log('login confirm clicked');
-
+    remove_errors('login_error_prompt');
     const data = {
         email: document.getElementById('login-email').value,
         pwd: document.getElementById('login-password').value
@@ -25,13 +24,11 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify(data)
     });
-    console.log(response);
 
     if ( response.ok ){
         console.log('successfully logged in');
-        location = '/';
+        location.reload()
     } else {
-        remove_errors('login_error_prompt');
         const body = await response.json()
         console.log(body);
         const error_prompt = document.createElement('span');

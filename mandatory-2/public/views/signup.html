@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/login.css">
-    <!-- <script src="js/login.js" defer></script> -->
-    <title>Document</title>
+    <link rel="stylesheet" href="style/auth.css">
+    <script src="js/signup.js" defer></script>
+    <title>Sign up</title>
 </head>
 <body>
     <main class="signup-main">
@@ -15,11 +15,13 @@
         <div class="signup-container" id="signup-modal">
             <h1>Register</h1>
             <form id="signup-form">
+                <label for="signup-username">Username:</label>
+                <input type="text" name="signup-username" id="signup-username" required>
                 <label for="signup-email">Email:</label>
                 <input type="email" name="signup-email" id="signup-email" required>
                 <label for="signup-password">Password:</label>
                 <input type="password" name="" id="signup-password" required>
-                <div id="error-container"></div>
+                <div class="error-container" id="error-container"></div>
                 <input type="submit" value="Sign up" id="signup-confirm">
             </form>
             <span>Already a user?</span>

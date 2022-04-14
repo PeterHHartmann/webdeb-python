@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 300;
+  overflow: hidden;
+  overflow-y: scroll;
+  background: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hoverable:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: all ease-in-out 0.1s;
+}
+
+.activated {
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: all ease-in-out 0.1s;
+}
+
+.more-svg {
+  width: 1.325rem;
+  fill: rgba(0, 0, 0, 0.7);
+}
+
+.login-main, .signup-main, .validation-main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(150, 175, 200, 0.2);
+  padding: 4% 0;
+}
+.login-main object, .signup-main object, .validation-main object {
+  width: clamp(40px, 20vw, 120px);
+}
+.login-main object svg, .signup-main object svg, .validation-main object svg {
+  fill: #1d9bf0;
+}
+.login-main h1, .signup-main h1, .validation-main h1 {
+  margin: 0 1rem 2% 1rem;
+  text-align: center;
+}
+.login-main .login-container, .login-main .signup-container, .login-main .validation-container, .signup-main .login-container, .signup-main .signup-container, .signup-main .validation-container, .validation-main .login-container, .validation-main .signup-container, .validation-main .validation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  background-color: white;
+  margin: 0 auto;
+  padding: 1% 2%;
+  border-radius: 3rem;
+  width: clamp(200px, calc(100vw - 2rem), 400px);
+  box-shadow: 0px 0.5rem 1rem rgba(0, 25, 50, 0.3);
+}
+.login-main .login-container a, .login-main .signup-container a, .login-main .validation-container a, .signup-main .login-container a, .signup-main .signup-container a, .signup-main .validation-container a, .validation-main .login-container a, .validation-main .signup-container a, .validation-main .validation-container a {
+  margin-bottom: 1rem;
+  background: rgba(0, 100, 100, 0.1);
+  font-weight: 400;
+  padding: 1rem 1rem;
+  border-radius: 3rem;
+  color: black;
+  width: 60%;
+  text-align: center;
+}
+.login-main .login-container > form, .login-main .signup-container > form, .login-main .validation-container > form, .signup-main .login-container > form, .signup-main .signup-container > form, .signup-main .validation-container > form, .validation-main .login-container > form, .validation-main .signup-container > form, .validation-main .validation-container > form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.login-main .login-container > form #error-container, .login-main .signup-container > form #error-container, .login-main .validation-container > form #error-container, .signup-main .login-container > form #error-container, .signup-main .signup-container > form #error-container, .signup-main .validation-container > form #error-container, .validation-main .login-container > form #error-container, .validation-main .signup-container > form #error-container, .validation-main .validation-container > form #error-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  min-height: 1.2em;
+}
+.login-main .login-container > form #error-container span, .login-main .signup-container > form #error-container span, .login-main .validation-container > form #error-container span, .signup-main .login-container > form #error-container span, .signup-main .signup-container > form #error-container span, .signup-main .validation-container > form #error-container span, .validation-main .login-container > form #error-container span, .validation-main .signup-container > form #error-container span, .validation-main .validation-container > form #error-container span {
+  color: #cf0000;
+  font-weight: 400;
+}
+.login-main .login-container > form label, .login-main .signup-container > form label, .login-main .validation-container > form label, .signup-main .login-container > form label, .signup-main .signup-container > form label, .signup-main .validation-container > form label, .validation-main .login-container > form label, .validation-main .signup-container > form label, .validation-main .validation-container > form label {
+  margin: 0.5rem 0 0 0.5rem;
+}
+.login-main .login-container > form input, .login-main .signup-container > form input, .login-main .validation-container > form input, .signup-main .login-container > form input, .signup-main .signup-container > form input, .signup-main .validation-container > form input, .validation-main .login-container > form input, .validation-main .signup-container > form input, .validation-main .validation-container > form input {
+  border: none;
+  outline: none;
+  background: rgba(0, 100, 100, 0.05);
+}
+.login-main .login-container > form input:not([type=submit]), .login-main .signup-container > form input:not([type=submit]), .login-main .validation-container > form input:not([type=submit]), .signup-main .login-container > form input:not([type=submit]), .signup-main .signup-container > form input:not([type=submit]), .signup-main .validation-container > form input:not([type=submit]), .validation-main .login-container > form input:not([type=submit]), .validation-main .signup-container > form input:not([type=submit]), .validation-main .validation-container > form input:not([type=submit]) {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  border-radius: 3rem;
+}
+.login-main .login-container > form input[type=submit], .login-main .signup-container > form input[type=submit], .login-main .validation-container > form input[type=submit], .signup-main .login-container > form input[type=submit], .signup-main .signup-container > form input[type=submit], .signup-main .validation-container > form input[type=submit], .validation-main .login-container > form input[type=submit], .validation-main .signup-container > form input[type=submit], .validation-main .validation-container > form input[type=submit] {
+  font-size: 1.1rem;
+  margin: 0.5rem auto;
+  padding: 1rem 1rem;
+  width: fit-content;
+  border-radius: 3rem;
+  background: #1d9bf0;
+  color: white;
+  text-align: center;
+  width: 60%;
+  white-space: nowrap;
+}
+
+/*# sourceMappingURL=auth.css.map */

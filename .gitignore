@@ -1,0 +1,9 @@
+mandatory-2/.env
+
+*/Scripts
+
+*/Lib
+
+*/__pycache__
+
+*/db/__pycache__

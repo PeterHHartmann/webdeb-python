@@ -1,14 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/index.css"/>
-    <script src="js/index.js" defer></script>
-    <title>Not Twitter</title>
-</head> -->
-
 % include('templates/head', title='Home / Not Twitter', stylesheet='style/index.css', script='js/index.js')
 <body>
     <section class="modal hidden" id="modal-mount">
@@ -62,7 +51,11 @@
                             <a href="/logout" id="logout-btn">Logout</a>
                         </div>
                         <div class="user-nav">
-                            <img src="/image/profile.jpg" alt="">
+                            % if get("user_pfp"):
+                                <div>USER PFP HERE</div>
+                            % else:
+                                <img src="/image/default-pfp.jpg" alt="">
+                            % end
                             <div class="user-info">
                                 <div>{{ user_name }}</div>
                                 <div>@{{ user_email }}</div>
@@ -82,7 +75,11 @@
                 <svg viewBox="0 0 24 24"><g><path d="M22.772 10.506l-5.618-2.192-2.16-6.5c-.102-.307-.39-.514-.712-.514s-.61.207-.712.513l-2.16 6.5-5.62 2.192c-.287.112-.477.39-.477.7s.19.585.478.698l5.62 2.192 2.16 6.5c.102.306.39.513.712.513s.61-.207.712-.513l2.16-6.5 5.62-2.192c.287-.112.477-.39.477-.7s-.19-.585-.478-.697zm-6.49 2.32c-.208.08-.37.25-.44.46l-1.56 4.695-1.56-4.693c-.07-.21-.23-.38-.438-.462l-4.155-1.62 4.154-1.622c.208-.08.37-.25.44-.462l1.56-4.693 1.56 4.694c.07.212.23.382.438.463l4.155 1.62-4.155 1.622zM6.663 3.812h-1.88V2.05c0-.414-.337-.75-.75-.75s-.75.336-.75.75v1.762H1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.782v1.762c0 .414.336.75.75.75s.75-.336.75-.75V5.312h1.88c.415 0 .75-.336.75-.75s-.335-.75-.75-.75zm2.535 15.622h-1.1v-1.016c0-.414-.335-.75-.75-.75s-.75.336-.75.75v1.016H5.57c-.414 0-.75.336-.75.75s.336.75.75.75H6.6v1.016c0 .414.335.75.75.75s.75-.336.75-.75v-1.016h1.098c.414 0 .75-.336.75-.75s-.336-.75-.75-.75z"></path></g></svg>
             </div>
             <div class="new-tweet">
-                <img src="/image/profile.jpg" alt="">
+                % if get("user_pfp"):
+                    <div>USER PFP HERE</div>
+                % else:
+                    <img src="/image/default-pfp.jpg" alt="">
+                % end
                 <form action="">
                     <textarea oninput="auto_grow(this)" maxlength="280" rows="1" placeholder="What's happening?"></textarea>
                 </form>
@@ -219,5 +216,14 @@
             </nav>
         </div>
     </main>
+    <div aria-hidden="true" class="toast-mount" id="toast-mount">
+        % try:
+            % if get('toast_msg'):
+                <toast class="hidden">{{ get('toast_msg') }}</toast>
+            % end
+        % except:
+
+        % end
+    </div>
 </body>
 </html>

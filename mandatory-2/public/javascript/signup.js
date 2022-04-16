@@ -7,8 +7,14 @@ const remove_errors = (id) => {
     }
 }
 
+const toggle_spinner = () => {
+    document.querySelector(`#submit-text`).classList.toggle('hidden')
+    document.querySelector('.spinner').classList.toggle('hidden')
+}
+
 document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    toggle_spinner();
     remove_errors('signup_error_prompt');
     console.log('signup confirm clicked');
     const data = {
@@ -37,4 +43,5 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
         error_prompt.innerHTML = '*' + body.msg;
         document.getElementById('error-container').prepend(error_prompt)
     }
+    toggle_spinner();
 });

@@ -37,6 +37,34 @@ a {
   fill: rgba(0, 0, 0, 0.7);
 }
 
+.toast-mount {
+  z-index: 50;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.toast-mount toast {
+  height: 0px;
+  background: rgba(29, 155, 240, 0.75);
+  color: white;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  overflow: hidden;
+  opacity: 0;
+  transition: all ease-in-out 0.25s;
+}
+.toast-mount toast.showing {
+  opacity: 1;
+  height: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0 2rem 2rem;
+  transition: all ease-in-out 0.25s;
+}
+
 .login-main, .signup-main, .validation-main {
   width: 100%;
   height: 100vh;
@@ -128,7 +156,7 @@ a {
   padding: 0.5rem 1rem;
   border-radius: 3rem;
 }
-.login-main .login-container > form input[type=submit], .login-main .signup-container > form input[type=submit], .login-main .validation-container > form input[type=submit], .signup-main .login-container > form input[type=submit], .signup-main .signup-container > form input[type=submit], .signup-main .validation-container > form input[type=submit], .validation-main .login-container > form input[type=submit], .validation-main .signup-container > form input[type=submit], .validation-main .validation-container > form input[type=submit] {
+.login-main .login-container > form input[type=submit], .login-main .login-container > form button, .login-main .signup-container > form input[type=submit], .login-main .signup-container > form button, .login-main .validation-container > form input[type=submit], .login-main .validation-container > form button, .signup-main .login-container > form input[type=submit], .signup-main .login-container > form button, .signup-main .signup-container > form input[type=submit], .signup-main .signup-container > form button, .signup-main .validation-container > form input[type=submit], .signup-main .validation-container > form button, .validation-main .login-container > form input[type=submit], .validation-main .login-container > form button, .validation-main .signup-container > form input[type=submit], .validation-main .signup-container > form button, .validation-main .validation-container > form input[type=submit], .validation-main .validation-container > form button {
   font-size: 1.1rem;
   margin: 0.5rem auto;
   padding: 1rem 1rem;
@@ -139,6 +167,47 @@ a {
   text-align: center;
   width: 60%;
   white-space: nowrap;
+}
+.login-main .login-container > form button, .login-main .signup-container > form button, .login-main .validation-container > form button, .signup-main .login-container > form button, .signup-main .signup-container > form button, .signup-main .validation-container > form button, .validation-main .login-container > form button, .validation-main .signup-container > form button, .validation-main .validation-container > form button {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3rem;
+}
+.login-main .login-container > form button:hover, .login-main .signup-container > form button:hover, .login-main .validation-container > form button:hover, .signup-main .login-container > form button:hover, .signup-main .signup-container > form button:hover, .signup-main .validation-container > form button:hover, .validation-main .login-container > form button:hover, .validation-main .signup-container > form button:hover, .validation-main .validation-container > form button:hover {
+  background-color: #1391e6;
+}
+.login-main .login-container > form button .spinner, .login-main .signup-container > form button .spinner, .login-main .validation-container > form button .spinner, .signup-main .login-container > form button .spinner, .signup-main .signup-container > form button .spinner, .signup-main .validation-container > form button .spinner, .validation-main .login-container > form button .spinner, .validation-main .signup-container > form button .spinner, .validation-main .validation-container > form button .spinner {
+  animation: rotate 2s linear infinite;
+  margin: 0 0 0 -1rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+.login-main .login-container > form button .spinner .path, .login-main .signup-container > form button .spinner .path, .login-main .validation-container > form button .spinner .path, .signup-main .login-container > form button .spinner .path, .signup-main .signup-container > form button .spinner .path, .signup-main .validation-container > form button .spinner .path, .validation-main .login-container > form button .spinner .path, .validation-main .signup-container > form button .spinner .path, .validation-main .validation-container > form button .spinner .path {
+  stroke: #93bfec;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
 }
 
 /*# sourceMappingURL=auth.css.map */

@@ -11,7 +11,14 @@
                 <label for="login-password">Password:</label>
                 <input type="password" name="" id="login-password" required>
                 <div id="error-container"></div>
-                <input type="submit" value="Login" id="login-confirm">
+                <button id="login-confirm">
+                    <p id="submit-text">Login</p>
+                    <svg class="spinner hidden" viewBox="0 0 50 50">
+                        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5">
+
+                        </circle>
+                    </svg>
+                </button>
             </form>
             <a href="/signup">Register as a user</a>
         </div>

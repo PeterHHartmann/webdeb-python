@@ -5,8 +5,14 @@ const remove_errors = (id) => {
     }
 }
 
+const toggle_spinner = () => {
+    document.querySelector(`#submit-text`).classList.toggle('hidden')
+    document.querySelector('.spinner').classList.toggle('hidden')
+}
+
 document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
+    toggle_spinner()
     remove_errors('login_error_prompt');
     const data = {
         email: document.getElementById('login-email').value,
@@ -26,7 +32,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     });
 
     if ( response.ok ){
-        location.reload()
+        location = '/?signedin=true'
     } else if (response.status === 403){
         const body = await response.json()
         location = `auth/${body.url_snippet}`
@@ -38,4 +44,5 @@ document.getElementById('login-form').addEventListener('submit', async function(
         error_prompt.innerHTML = '* ' + body.msg;
         document.getElementById('error-container').prepend(error_prompt)
     }
+    toggle_spinner();
 });

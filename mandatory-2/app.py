@@ -1,5 +1,4 @@
-
-import code
+import time
 from dotenv import load_dotenv
 load_dotenv()
 from uuid import uuid4
@@ -19,6 +18,14 @@ import traceback
 
 TEMPLATE_PATH.insert(0, 'public/views')
 
+def set_JWT(payload):
+    encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
+    cookie_opts = {'max_age': 3600 * 24 * 3}
+    response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
+
+# def get_JWT(cookie):
+
+
 ### static file routes
 @get('/style/<stylesheet_name>')
 def _(stylesheet_name):
@@ -32,15 +39,22 @@ def _(script_name):
 def _(image_name):
     return static_file(image_name, root='public/image')
 
-### views
-@get('/')
-@view('index')
-def _():
+def get_JWT():
     cookie = request.get_cookie("JWT", secret="secret_info")
     if cookie:
         parsed = json.loads(cookie)
         data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
         return data
+
+### views
+@get('/')
+@view('index')
+def _():
+    payload = get_JWT()
+    if payload:
+        if request.query.get('signedin'):
+            return dict(toast_msg='You have successfully logged in', **payload)
+        return payload
     else:
         return redirect('/login')
 
@@ -49,6 +63,10 @@ def _():
 def _():
     cookie = request.get_cookie("JWT", secret="secret_info")
     if cookie:
+        parsed = json.loads(cookie)
+        data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
+        if data['status']:
+            return redirect(f'/auth/{data["status"]["url_snippet"]}')
         return redirect('/')
     else:
         return
@@ -70,18 +88,6 @@ def _():
         return dict(msg='Please enter a password')
 
     try:
-        validation = json.loads(db.validation_get_by_email(input_email))
-        print(validation)
-        if validation:
-            # redirect_url = f'/auth/{validation["validation_url"]}'
-            response.status = 403
-            return dict(url_snippet=validation['validation_url'])
-    except:
-        traceback.print_exc()
-        response.status = 500
-        return dict(msg='Something went wrong, please try again later')
-
-    try:
         result = json.loads(db.user_get(dict(user_email=input_email)))
         if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result.get('user_pwd'), 'utf-8')):
             response.status = 401
@@ -91,10 +97,16 @@ def _():
                 "user_name": result.get('user_name'),
                 "user_email": result.get('user_email')
             }
-            encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
-            print(encoded_jwt)
-            cookie_opts = {'max_age': 3600 * 24 * 3}
-            response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
+            try:
+                validation = json.loads(db.validation_get_by_email(input_email))
+                if validation:
+                    payload['status'] = {'verified': False, 'url_snippet': validation['validation_url']}
+                    set_JWT(payload)
+                    response.status = 403
+                    return dict(url_snippet=validation['validation_url'])
+            except:
+                traceback.print_exc()
+            set_JWT(payload)
             return
     except:
         traceback.print_exc()
@@ -237,6 +249,13 @@ def _(url_code):
         if confirmation[0]:
             if confirmation[0]['validation_code'] == int(data['code']):
                 db.validation_delete(dict(user_email=data['user_email']))
+                cookie = request.get_cookie("JWT", secret="secret_info")
+                if cookie:
+                    parsed = json.loads(cookie)
+                    data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
+                    del data['status']
+                    encoded_jwt = jwt.encode(data, "secret_jwt", algorithm="HS256")
+                    response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info")
                 return
             else:
                 response.status = 401
@@ -255,5 +274,4 @@ def _(error):
     print(error)
     return
 
-
-run(host='127.0.0.1', port=3334, debug=True, reloader=True, server='paste')
+run(host='127.0.0.1', port=3334, debug=True, reloader=True)

@@ -8,7 +8,7 @@
 
         % end
         <div class="validation-container">
-            <b>Before you can start using Not Twitter<br>Please verify your email</b>
+            <b>Please verify your email<br>Before you can start using Not Twitter</b>
             <p>Didn't receive a code?</p>
             <button>Resend verification code</button>
             <form id="validation-form">
@@ -20,7 +20,14 @@
                 
                 % end
                 <div id="error-container"></div>
-                <input type="submit" value="Submit" id="validation-confirm">
+                <button id="validation-confirm">
+                    <p id="submit-text">Verify</p>
+                    <svg class="spinner hidden" viewBox="0 0 50 50">
+                        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5">
+
+                        </circle>
+                    </svg>
+                </button>
             </form>
         </div>
     </main>

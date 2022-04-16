@@ -5,6 +5,11 @@ const remove_errors = (id) => {
     }
 }
 
+const toggle_spinner = () => {
+    document.querySelector(`#submit-text`).classList.toggle('hidden')
+    document.querySelector('.spinner').classList.toggle('hidden')
+}
+
 document.getElementById('validation-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     remove_errors('login_error_prompt');

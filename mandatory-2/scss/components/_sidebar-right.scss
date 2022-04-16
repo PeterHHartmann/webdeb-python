@@ -16,6 +16,7 @@
         padding: 0 0 1rem 2rem;
         z-index: 9;
         grid-column: 3;
+        width: 24rem;
 
         > * {
             &:not(.search-mount) {
@@ -24,13 +25,11 @@
                 border-radius: 1rem;
                 padding: 1rem 1rem 1rem 1rem;
                 margin-bottom: 1rem;
-                width: 300px;
             }
         }
 
         .search-mount {
             z-index: 20;
-            width: inherit;
             position: sticky;
             top: 0;
             background: white;
@@ -56,6 +55,7 @@
                     padding: .5rem 0;
                     font-size: 1rem;
                     outline: none;
+                    width: 100%;
                 }
             }
         }

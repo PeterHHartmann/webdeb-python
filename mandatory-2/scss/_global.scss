@@ -40,3 +40,33 @@ a {
     width: 1.325rem;
     fill: rgba(0, 0, 0, 0.7);
 }
+
+.toast-mount {
+    z-index: 50;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    toast {
+        height: 0px;
+        background: rgba(29, 155, 240, 0.75);
+        color: white;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        overflow: hidden;
+        opacity: 0;
+        transition: all ease-in-out .25s;
+
+        &.showing {
+            opacity: 1;
+            height: 3rem;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            border-radius: 0 0 2rem 2rem;
+            transition: all ease-in-out .25s;
+        }
+    }
+}

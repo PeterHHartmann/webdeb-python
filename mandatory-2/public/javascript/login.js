@@ -26,11 +26,12 @@ document.getElementById('login-form').addEventListener('submit', async function(
     });
 
     if ( response.ok ){
-        console.log('successfully logged in');
         location.reload()
+    } else if (response.status === 403){
+        const body = await response.json()
+        location = `auth/${body.url_snippet}`
     } else {
         const body = await response.json()
-        console.log(body);
         const error_prompt = document.createElement('span');
         error_prompt.id = 'login_error_prompt';
         error_prompt.classList.add('error_prompt');

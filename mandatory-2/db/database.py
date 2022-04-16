@@ -25,7 +25,7 @@ def user_post(user, validation):
     finally:
         db.close()
 
-def validation_get(url):
+def validation_get_by_url(url):
     try:
         db = sqlite3.connect('db/database.sqlite')
         db.row_factory = dict_factory
@@ -42,6 +42,27 @@ def validation_get(url):
             ON email_validations.user_id=users.user_id 
             WHERE validation_url=:validation_url;
             ''', dict(validation_url=url)).fetchall())
+        return validation
+    finally:
+        db.close()
+
+def validation_get_by_email(email):
+    try:
+        db = sqlite3.connect('db/database.sqlite')
+        db.row_factory = dict_factory
+        validation = json.dumps(db.execute(
+            '''
+            SELECT 
+                users.user_id, 
+                users.user_name,
+                users.user_email,
+                email_validations.validation_url, 
+                email_validations.validation_code
+            FROM users
+            INNER JOIN email_validations 
+            ON email_validations.user_id=users.user_id 
+            WHERE users.user_email=?;
+            ''', (email,)).fetchone())
         return validation
     finally:
         db.close()

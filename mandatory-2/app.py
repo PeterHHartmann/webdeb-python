@@ -1,4 +1,5 @@
 
+import code
 from dotenv import load_dotenv
 load_dotenv()
 from uuid import uuid4
@@ -27,7 +28,7 @@ def _(stylesheet_name):
 def _(script_name):
     return static_file(script_name, root='public/javascript')
 
-@get('/images/<image_name>')
+@get('/image/<image_name>')
 def _(image_name):
     return static_file(image_name, root='public/image')
 
@@ -43,6 +44,63 @@ def _():
     else:
         return redirect('/login')
 
+@get('/login')
+@view('login')
+def _():
+    cookie = request.get_cookie("JWT", secret="secret_info")
+    if cookie:
+        return redirect('/')
+    else:
+        return
+
+@post('/login')
+def _():
+    data = json.load(request.body)
+    input_email = data.get('email')
+    if not input_email or len(input_email.strip()) < 1:
+        response.status = 400
+        return dict(msg='Please enter an email')
+    if not re.match(g.REGEX_EMAIL, input_email):
+        response.status = 400
+        return dict(msg='Please enter a valid email')
+
+    input_pwd = data.get('pwd')
+    if not input_pwd or len(input_pwd.strip()) < 1:
+        response.status = 400
+        return dict(msg='Please enter a password')
+
+    try:
+        validation = json.loads(db.validation_get_by_email(input_email))
+        print(validation)
+        if validation:
+            # redirect_url = f'/auth/{validation["validation_url"]}'
+            response.status = 403
+            return dict(url_snippet=validation['validation_url'])
+    except:
+        traceback.print_exc()
+        response.status = 500
+        return dict(msg='Something went wrong, please try again later')
+
+    try:
+        result = json.loads(db.user_get(dict(user_email=input_email)))
+        if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result.get('user_pwd'), 'utf-8')):
+            response.status = 401
+            return dict(msg='Invalid email or password')
+        else:
+            payload = {
+                "user_name": result.get('user_name'),
+                "user_email": result.get('user_email')
+            }
+            encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
+            print(encoded_jwt)
+            cookie_opts = {'max_age': 3600 * 24 * 3}
+            response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
+            return
+    except:
+        traceback.print_exc()
+        print("didn't find user")
+        response.status = 401
+        return dict(msg='Invalid email or password')
 
 @get('/signup')
 @view('signup')
@@ -106,7 +164,7 @@ def _():
         Hi, {user_name}
         Thank you for signing up to Not Twitter.
         Please visit: {full_url} to confirm your email
-        Your confirmation digits are: {validation["code"]}
+        Your verification code is: {validation["code"]}
         """
 
         html = f"""\
@@ -115,7 +173,7 @@ def _():
             <h2 style="color: rgb(29, 155, 240)">Hi, {user['user_name']}.</h2>
             <h3>Thank you for signing up to Not Twitter.</h3>
             <span>
-                <p>Your email conformation digits are: </p>
+                <p>Your verification code is: </p>
                 <h1 style="color: rgb(51, 51, 51)">{validation["code"]}</h1>
             </span>
             <p>Please visit <a href="{full_url}">this link</a> to confirm your email</p>
@@ -138,10 +196,10 @@ def _():
             try:
                 server.login(sender_email, password)
                 server.sendmail(sender_email, receiver_email, message.as_string())
-                return "yes, email sent"
             except Exception as ex:
                 print("ex")
-                return "uppps... could not send the email"
+        
+        return dict(url_snippet=validation['url_snippet'])
         
     except Exception as e:
         print(e)
@@ -156,52 +214,6 @@ def _():
                     user_email=user_email,
                 )
 
-@get('/login')
-@view('login')
-def _():
-    cookie = request.get_cookie("JWT", secret="secret_info")
-    if cookie:
-        return redirect('/')
-    else:
-        return
-
-@post('/login')
-def _():
-    data = json.load(request.body)
-    input_email = data.get('email')
-    if not input_email or len(input_email.strip()) < 1:
-        response.status = 400
-        return dict(msg='Please enter an email')
-    if not re.match(g.REGEX_EMAIL, input_email):
-        response.status = 400
-        return dict(msg='Please enter a valid email')
-
-    input_pwd = data.get('pwd')
-    if not input_pwd or len(input_pwd.strip()) < 1:
-        response.status = 400
-        return dict(msg='Please enter a password')
-
-    try:
-        result = json.loads(db.user_get(dict(user_email=input_email)))
-        if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result.get('user_pwd'), 'utf-8')):
-            response.status = 401
-            return dict(msg='Invalid email or password')
-        else:
-            payload = {
-                "user_name": result.get('user_name'),
-                "user_email": result.get('user_email')
-            }
-            encoded_jwt = jwt.encode(payload, "secret_jwt", algorithm="HS256")
-            print(encoded_jwt)
-            cookie_opts = {'max_age': 3600 * 24 * 3}
-            response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
-            return
-    except:
-        traceback.print_exc()
-        print("didn't find user")
-        response.status = 401
-        return dict(msg='Invalid email or password')
-
 @get('/logout')
 def _():
     response.delete_cookie("JWT", secret="secret_info")
@@ -211,7 +223,7 @@ def _():
 @view('email-validation')
 def _(url_code):
     try:
-        validation = json.loads(db.validation_get(url_code))[0]
+        validation = json.loads(db.validation_get_by_url(url_code))[0]
         return dict(user_name=validation['user_name'], user_email=validation['user_email'], confirmation_url=url_code)
     except Exception as ex:
         print(ex)
@@ -221,7 +233,7 @@ def _(url_code):
 def _(url_code):
     data = json.load(request.body)
     try:
-        confirmation = json.loads(db.validation_get(url_code))
+        confirmation = json.loads(db.validation_get_by_url(url_code))
         if confirmation[0]:
             if confirmation[0]['validation_code'] == int(data['code']):
                 db.validation_delete(dict(user_email=data['user_email']))

@@ -1,3 +1,5 @@
+console.log('signup script loaded');
+
 const remove_errors = (id) => {
     const error_prompt = document.getElementById(id)
     if (error_prompt) {
@@ -25,8 +27,7 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
  
     if ( response.ok ){
         const body = await response.json()
-        console.log(body);
-        console.log('successfully signed up');
+        location = `/auth/${body.url_snippet}`
     } else {
         const body = await response.json()
         console.log(body);

@@ -65,6 +65,20 @@ a {
   transition: all ease-in-out 0.25s;
 }
 
+.validation-main .validation-container > button {
+  border: 1px solid #646464;
+  outline: none;
+  padding: 0.725rem;
+  border-radius: 2rem;
+  color: #1d9bf0;
+  margin: 0.5rem 0 1rem 0;
+  background: white;
+  cursor: pointer;
+}
+.validation-main .validation-container > button:hover {
+  background: #1d9bf0;
+  color: white;
+}
 .validation-main .validation-container .otc {
   margin: 0 auto;
 }
@@ -113,7 +127,7 @@ a {
   appearance: textfield;
   -webkit-appearance: textfield;
   border: 2px solid #BBBBFF;
-  color: purple;
+  color: black;
   border-radius: 4px;
 }
 .validation-main .validation-container .otc fieldset input[type=number]:nth-child(n+4) {
@@ -165,16 +179,6 @@ a {
 .login-main .login-container > p, .login-main .signup-container > p, .login-main .validation-container > p, .signup-main .login-container > p, .signup-main .signup-container > p, .signup-main .validation-container > p, .validation-main .login-container > p, .validation-main .signup-container > p, .validation-main .validation-container > p {
   margin-top: 1rem;
   font-size: 1rem;
-}
-.login-main .login-container > button, .login-main .signup-container > button, .login-main .validation-container > button, .signup-main .login-container > button, .signup-main .signup-container > button, .signup-main .validation-container > button, .validation-main .login-container > button, .validation-main .signup-container > button, .validation-main .validation-container > button {
-  border: 1px solid #646464;
-  outline: none;
-  padding: 0.725rem;
-  border-radius: 2rem;
-  color: #1d9bf0;
-  margin: 0.5rem 0 1rem 0;
-  background: white;
-  cursor: pointer;
 }
 .login-main .login-container a, .login-main .signup-container a, .login-main .validation-container a, .signup-main .login-container a, .signup-main .signup-container a, .signup-main .validation-container a, .validation-main .login-container a, .validation-main .signup-container a, .validation-main .validation-container a {
   margin-bottom: 1rem;

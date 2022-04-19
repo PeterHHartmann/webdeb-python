@@ -25,6 +25,60 @@ def set_JWT(payload):
 
 # def get_JWT(cookie):
 
+def send_validation_email(url, code, user_name):
+    sender_email = os.getenv('EMAIL')
+
+    #TODO change receiver_email to the email that signed up
+    receiver_email = os.getenv('EMAIL')
+    password = os.getenv('EMAIL_PW')
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "Not Twitter Email Confirmation"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    #TODO change url to work with pythonanywhere
+    full_url = f'http://localhost:3334/auth/{url}'
+
+    # Create the plain-text and HTML version of your message
+    text = f"""\
+    Hi, {user_name}
+    Thank you for signing up to Not Twitter.
+    Please visit: {full_url} to confirm your email
+    Your verification code is: {code}
+    """
+
+    html = f"""\
+    <html>
+        <body>
+        <h2 style="color: rgb(29, 155, 240)">Hi, {user_name}.</h2>
+        <h3>Thank you for signing up to Not Twitter.</h3>
+        <span>
+            <p>Your verification code is: </p>
+            <h1 style="color: rgb(51, 51, 51)">{code}</h1>
+        </span>
+        <p>Please visit <a href="{full_url}">this link</a> to confirm your email</p>
+        </body>
+    </html>
+    """
+
+    # Turn these into plain/html MIMEText objects
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+
+    # Add HTML/plain-text parts to MIMEMultipart message
+    # The email client will try to render the last part first
+    message.attach(part1)
+    message.attach(part2)
+
+    # Create secure connection with server and send email
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        try:
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        except Exception as ex:
+            print("ex")
 
 ### static file routes
 @get('/style/<stylesheet_name>')
@@ -158,59 +212,7 @@ def _():
             user_pwd=hashed)
         db.user_post(user, validation)
 
-        sender_email = os.getenv('EMAIL')
-
-        #TODO change receiver_email to the email that signed up
-        receiver_email = os.getenv('EMAIL')
-        password = os.getenv('EMAIL_PW')
-
-        message = MIMEMultipart("alternative")
-        message["Subject"] = "Not Twitter Email Confirmation"
-        message["From"] = sender_email
-        message["To"] = receiver_email
-
-        full_url = f'http://localhost:3334/auth/{validation["url_snippet"]}'
-
-        # Create the plain-text and HTML version of your message
-        text = f"""\
-        Hi, {user_name}
-        Thank you for signing up to Not Twitter.
-        Please visit: {full_url} to confirm your email
-        Your verification code is: {validation["code"]}
-        """
-
-        html = f"""\
-        <html>
-            <body>
-            <h2 style="color: rgb(29, 155, 240)">Hi, {user['user_name']}.</h2>
-            <h3>Thank you for signing up to Not Twitter.</h3>
-            <span>
-                <p>Your verification code is: </p>
-                <h1 style="color: rgb(51, 51, 51)">{validation["code"]}</h1>
-            </span>
-            <p>Please visit <a href="{full_url}">this link</a> to confirm your email</p>
-            </body>
-        </html>
-        """
-
-        # Turn these into plain/html MIMEText objects
-        part1 = MIMEText(text, "plain")
-        part2 = MIMEText(html, "html")
-
-        # Add HTML/plain-text parts to MIMEMultipart message
-        # The email client will try to render the last part first
-        message.attach(part1)
-        message.attach(part2)
-
-        # Create secure connection with server and send email
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-            try:
-                server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, message.as_string())
-            except Exception as ex:
-                print("ex")
-        
+        send_validation_email(validation['url_snippet'], validation['code'], user_name)
         return dict(url_snippet=validation['url_snippet'])
         
     except Exception as e:
@@ -247,8 +249,9 @@ def _(url_code):
     resend = request.query.get('resend', None)
     if resend:
         try:
-            db.validation_update_code(data['user_email'], randint(100000, 999999))
-            # TODO send new email
+            new_code = randint(100000, 999999)
+            db.validation_update_code(data['user_email'], new_code)
+            send_validation_email(url_code, new_code, data['user_name'])
             return
         except:
             traceback.print_exc()

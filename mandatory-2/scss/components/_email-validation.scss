@@ -2,6 +2,23 @@
 
 .validation-main {
     .validation-container {
+
+        > button {
+            border: 1px solid rgba(100, 100, 100, 1);
+            outline: none;
+            padding: .725rem;
+            border-radius: 2rem;
+            color: rgb(29, 155, 240);
+            margin: .5rem 0 1rem 0;
+            background: white;
+            cursor: pointer;
+
+            &:hover {
+                background: rgb(29, 155, 240);
+                color: white;
+            }
+        }
+
         .otc {
             // width: 320px;
             margin: 0 auto;
@@ -53,7 +70,7 @@
                     appearance: textfield;
                     -webkit-appearance: textfield;
                     border: 2px solid #BBBBFF;
-                    color: purple;
+                    color: black;
                     border-radius: 4px;
         
                     &:nth-child(n+4) {

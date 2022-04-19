@@ -139,7 +139,8 @@ document.querySelector('#resend-btn').addEventListener('click', async (e) => {
     e.preventDefault();
 
     const data = {
-        user_email: document.getElementById('validation-email').value
+        user_email: document.getElementById('validation-email').value,
+        user_name: document.getElementById('validation-user_name').value
     }
 
     await fetch(`${location.pathname}?resend=true`, {

@@ -67,6 +67,27 @@ def validation_get_by_email(email):
     finally:
         db.close()
 
+# TODO less complex SQL query without including the user might be better
+def validation_update_code(email, new_code):
+    try:
+        db = sqlite3.connect('db/database.sqlite')
+        db.execute(
+            '''
+            UPDATE email_validations
+            SET validation_code=:validation_code
+            WHERE user_id IN (
+                SELECT e.user_id FROM email_validations e
+                INNER JOIN users u 
+                ON (e.user_id=u.user_id)
+                WHERE u.user_email=:email
+            );
+            ''', dict(email=email, validation_code=new_code))
+
+        db.commit()
+    finally:
+        db.close()
+
+
 def validation_delete(user):
     print(user)
     try:

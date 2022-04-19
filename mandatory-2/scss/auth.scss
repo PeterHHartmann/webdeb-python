@@ -1,4 +1,5 @@
 @use 'global';
+@use 'components/email-validation';
 
 .login-main, .signup-main, .validation-main {
     width: 100%;
@@ -69,6 +70,9 @@
             text-align: center;
         }
 
+        
+
+
         > form {
             display: flex;
             flex-direction: column;
@@ -97,14 +101,14 @@
                 background: rgba(0, 100, 100, 0.05);
             }
 
-            input:not([type=submit]) {
+            > input:not([type=submit]) {
                 font-size: 1.1rem;
                 margin: 0.5rem 0;
                 padding: .5rem 1rem;
                 border-radius: 3rem;
             }
 
-            input[type=submit], button {
+            > input[type=submit], button {
                 font-size: 1.1rem;
                 margin: 0.5rem auto;
                 padding: 1rem 1rem;
@@ -135,7 +139,7 @@
                     height: 2.2rem;
 
                     & .path {
-                        stroke: hsl(210, 70, 75);
+                        stroke: rgb(147, 191, 236);
                         stroke-linecap: round;
                         animation: dash 1.5s ease-in-out infinite;
                     }
@@ -166,4 +170,3 @@
         stroke-dashoffset: -124;
     }
 }
-  

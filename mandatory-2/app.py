@@ -244,6 +244,17 @@ def _(url_code):
 @post('/auth/<url_code>')
 def _(url_code):
     data = json.load(request.body)
+    resend = request.query.get('resend', None)
+    if resend:
+        try:
+            db.validation_update_code(data['user_email'], randint(100000, 999999))
+            # TODO send new email
+            return
+        except:
+            traceback.print_exc()
+            response.status = 500
+            return dict(msg='something went wrong sorry')
+
     try:
         confirmation = json.loads(db.validation_get_by_url(url_code))
         if confirmation[0]:
@@ -267,6 +278,7 @@ def _(url_code):
         traceback.print_exc()
         response.status = 500
         return dict(msg='Something went wrong, please try again later')
+
 
 @error(404)
 @view('404')

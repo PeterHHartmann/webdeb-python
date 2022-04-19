@@ -10,15 +10,11 @@
         <div class="validation-container">
             <b>Please verify your email<br>Before you can start using Not Twitter</b>
             <p>Didn't receive a code?</p>
-            <button>Resend verification code</button>
-            <form id="validation-form">
+            <button id="resend-btn">Resend validation code</button>
+            <!-- <form id="validation-form">
                 <label for="validation-digits">Verification code:</label>
                 <input type="number" name="validation-code" id="validation-code" maxlength="6" required>
-                % try:
-                <input type="hidden" name="user_email" id="validation-email" value={{ user_email }}>
-                % except:
                 
-                % end
                 <div id="error-container"></div>
                 <button id="validation-confirm">
                     <p id="submit-text">Verify</p>
@@ -28,6 +24,39 @@
                         </circle>
                     </svg>
                 </button>
+            </form> -->
+            <form class="otc" name="one-time-code" id="validation-form" action="#">
+                <fieldset>
+                    <legend>Validation Code</legend>
+                    <label for="otc-1">Number 1</label>
+                    <label for="otc-2">Number 2</label>
+                    <label for="otc-3">Number 3</label>
+                    <label for="otc-4">Number 4</label>
+                    <label for="otc-5">Number 5</label>
+                    <label for="otc-6">Number 6</label>
+                    % try:
+                    <input type="hidden" name="user_email" id="validation-email" value={{ user_email }}>
+                    % except:
+                    
+                    % end
+                    <div>
+                        <input type="number" pattern="[0-9]*"  value="" inputtype="numeric" autocomplete="one-time-code" id="otc-1" required>
+                        <!-- Autocomplete not to put on other input -->
+                        <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1"  value="" inputtype="numeric" id="otc-2" required>
+                        <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1"  value="" inputtype="numeric" id="otc-3" required>
+                        <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1"  value="" inputtype="numeric" id="otc-4" required>
+                        <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1"  value="" inputtype="numeric" id="otc-5" required>
+                        <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1"  value="" inputtype="numeric" id="otc-6" required>
+                    </div>
+                    <button id="validation-confirm">
+                        <p id="submit-text">Verify</p>
+                        <svg class="spinner hidden" viewBox="0 0 50 50">
+                            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5">
+    
+                            </circle>
+                        </svg>
+                    </button>
+                </fieldset>
             </form>
         </div>
     </main>

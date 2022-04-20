@@ -1,4 +1,6 @@
+from http.client import NOT_FOUND
 import time
+from xml.dom import NOT_FOUND_ERR
 from dotenv import load_dotenv
 load_dotenv()
 import re, json, os, smtplib, ssl, traceback
@@ -20,10 +22,13 @@ def set_JWT(payload):
     response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
 
 def get_JWT():
-    cookie = request.get_cookie("JWT", secret="secret_info")
-    parsed = json.loads(cookie)
-    data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
-    return data
+    try:
+        cookie = request.get_cookie("JWT", secret="secret_info")
+        parsed = json.loads(cookie)
+        data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
+        return data
+    except:
+        return None
 
 def send_validation_email(url, code, user_name):
     sender_email = os.getenv('EMAIL')
@@ -97,13 +102,13 @@ def _(image_name):
 @get('/')
 @view('index')
 def _():
-    try:
-        payload = get_JWT()
-        if request.query.get('signedin'):
-            return dict(toast_msg='You have successfully logged in', **payload)
-        return payload
-    except:
+    payload = get_JWT()
+    if not payload:
         return redirect('/login')
+
+    if request.query.get('signedin'):
+        return dict(toast_msg='You have successfully logged in', **payload)
+    return payload
 
 @get('/login')
 @view('login')
@@ -112,7 +117,7 @@ def _():
     if cookie:
         parsed = json.loads(cookie)
         data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
-        if data['status']:
+        if data.get('status'):
             return redirect(f'/auth/{data["status"]["url_snippet"]}')
         return redirect('/')
     else:
@@ -136,11 +141,11 @@ def _():
         return dict(msg='Please enter a password')
 
     try:
-        user = db.user_get(dict(user_email=input['email']))
+        user = db.user_get_by_email(input['email'])
 
         # check if input pwd doesn't match db password
         if bcrypt.checkpw(bytes(input['pwd'], 'utf-8'), bytes(user['user_pwd'], 'utf-8')):
-            details = db.details_get(dict(user_name=user['user_name']))
+            details = db.details_get(user_name=user['user_name'])
             print(type(details))
             payload = {
                 'user_name': user['user_name'],
@@ -267,7 +272,6 @@ def _(url_code):
 
 @post('/auth/<url_code>')
 def _(url_code):
-    # time.sleep(3)
     data = json.load(request.body)
     try:
         confirmation = db.validation_get_by_url(url_code)
@@ -296,11 +300,24 @@ def _(url_code):
         response.status = 500
         return dict(msg='Something went wrong, please try again later')
 
+@get('/profile/<user_name>')
+@view('user')
+def _(user_name):
+    payload = get_JWT()
+    if not payload:
+        return redirect('/login')
+    try:
+        user = db.user_get_by_username(user_name)
+        details = db.details_get(user_name)
+        return dict(profile_user_name=user['user_name'], profile_display_name=details['detail_display_name'], **payload)
+    except:
+        traceback.print_exc()
+        response.status = 404
+        return ''
 
 @error(404)
 @view('404')
 def _(error):
-    print(error)
     return
 
 run(host='127.0.0.1', port=3334, debug=True, reloader=True)

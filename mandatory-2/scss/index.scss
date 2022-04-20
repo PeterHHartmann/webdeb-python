@@ -1,6 +1,7 @@
 @use 'global';
 @use 'components/sidebar-left';
 @use 'components/tweet-deck';
+@use 'components/profile-deck';
 @use 'components/sidebar-right';
 @use 'components/modals';
 @use 'abstracts/media-query';
@@ -16,5 +17,6 @@
 
     @include media-query.respond-to(1021px){
         grid-template-columns: 1fr 19fr;
+        
     }
 }

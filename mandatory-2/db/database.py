@@ -7,11 +7,20 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-def user_get(user):
+def user_get_by_email(user_email):
     try:
         db = sqlite3.connect('db/database.sqlite')
         db.row_factory = dict_factory
-        user = json.dumps(db.execute('SELECT * FROM users WHERE user_email=:user_email', user).fetchone())
+        user = json.dumps(db.execute('SELECT * FROM users WHERE user_email=:user_email', dict(user_email=user_email)).fetchone())
+        return json.loads(user)
+    finally:
+        db.close()
+
+def user_get_by_username(user_name):
+    try:
+        db = sqlite3.connect('db/database.sqlite')
+        db.row_factory = dict_factory
+        user = json.dumps(db.execute('SELECT * FROM users WHERE user_name=:user_name', dict(user_name=user_name)).fetchone())
         return json.loads(user)
     finally:
         db.close()
@@ -26,11 +35,11 @@ def user_post(user, validation, details):
     finally:
         db.close()
 
-def details_get(user):
+def details_get(user_name):
     try:
         db = sqlite3.connect('db/database.sqlite')
         db.row_factory = dict_factory
-        details = json.dumps(db.execute('SELECT * FROM user_details WHERE user_name=:user_name', user).fetchone())
+        details = json.dumps(db.execute('SELECT * FROM user_details WHERE user_name=:user_name', dict(user_name=user_name)).fetchone())
         return json.loads(details)
     finally:
         db.close()

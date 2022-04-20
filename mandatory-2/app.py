@@ -1,19 +1,16 @@
+import time
 from dotenv import load_dotenv
 load_dotenv()
+import re, json, os, smtplib, ssl, traceback
 from uuid import uuid4
 from bottle import error, get, post, redirect, request, response, run, static_file, view, TEMPLATE_PATH
 import g
-import re
-import json
 import bcrypt
 import jwt
-import os
-import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from random import randint
 import db.database as db
-import traceback
 
 TEMPLATE_PATH.insert(0, 'public/views')
 
@@ -22,7 +19,11 @@ def set_JWT(payload):
     cookie_opts = {'max_age': 3600 * 24 * 3}
     response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info", **cookie_opts)
 
-# def get_JWT(cookie):
+def get_JWT():
+    cookie = request.get_cookie("JWT", secret="secret_info")
+    parsed = json.loads(cookie)
+    data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
+    return data
 
 def send_validation_email(url, code, user_name):
     sender_email = os.getenv('EMAIL')
@@ -92,23 +93,16 @@ def _(script_name):
 def _(image_name):
     return static_file(image_name, root='public/image')
 
-def get_JWT():
-    cookie = request.get_cookie("JWT", secret="secret_info")
-    if cookie:
-        parsed = json.loads(cookie)
-        data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
-        return data
-
 ### views
 @get('/')
 @view('index')
 def _():
-    payload = get_JWT()
-    if payload:
+    try:
+        payload = get_JWT()
         if request.query.get('signedin'):
             return dict(toast_msg='You have successfully logged in', **payload)
         return payload
-    else:
+    except:
         return redirect('/login')
 
 @get('/login')
@@ -127,46 +121,48 @@ def _():
 @post('/login')
 def _():
     data = json.load(request.body)
-    input_email = data.get('email')
-    if not input_email or len(input_email.strip()) < 1:
+    input = {
+        'email': data.get('email'),
+        'pwd': data.get('pwd'),
+    }
+    if not input['email'] or len(input['email'].strip()) < 1:
         response.status = 400
         return dict(msg='Please enter an email')
-    if not re.match(g.REGEX_EMAIL, input_email):
+    if not re.match(g.REGEX_EMAIL, input['email']):
         response.status = 400
         return dict(msg='Please enter a valid email')
-
-    input_pwd = data.get('pwd')
-    if not input_pwd or len(input_pwd.strip()) < 1:
+    if not input['pwd'] or len(input['pwd'].strip()) < 1:
         response.status = 400
         return dict(msg='Please enter a password')
 
     try:
-        result = json.loads(db.user_get(dict(user_email=input_email)))
+        user = db.user_get(dict(user_email=input['email']))
 
         # check if input pwd doesn't match db password
-        if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result.get('user_pwd'), 'utf-8')):
-            response.status = 401
-            return dict(msg='Invalid email or password')
-        # otherwise proceed with login process
-        else:
+        if bcrypt.checkpw(bytes(input['pwd'], 'utf-8'), bytes(user['user_pwd'], 'utf-8')):
+            details = db.details_get(dict(user_name=user['user_name']))
+            print(type(details))
             payload = {
-                "user_name": result.get('user_name'),
-                "user_email": result.get('user_email')
+                'user_name': user['user_name'],
+                'user_email': user['user_email'],
+                'display_name': details['detail_display_name']
             }
             try:
                 # check if user has validated their email 
                 # if they haven't return redirect url with error code 403: Forbidden
-                validation = json.loads(db.validation_get_by_email(input_email))
+                validation = db.validation_get_by_email(user['user_email'])
                 if validation:
                     payload['status'] = {'verified': False, 'url_snippet': validation['validation_url']}
                     set_JWT(payload)
                     response.status = 403
                     return dict(url_snippet=validation['validation_url'])
-            except:
-                traceback.print_exc()
-
-            set_JWT(payload)
-            return
+            finally:
+                set_JWT(payload)
+                return
+        # otherwise proceed with login process
+        else:
+            response.status = 401
+            return dict(msg='Invalid email or password')
     except:
         traceback.print_exc()
         response.status = 401
@@ -184,16 +180,29 @@ def _():
 @post('/signup')
 def _():
     data = json.load(request.body)
-    user_name = data.get('username')
-    if len(user_name.strip()) < 1:
+
+    display_name = data.get('display_name').strip()
+    if len(display_name) < 1:
+        response.status = 400
+        return dict(msg='Please enter a display name')
+    if len(display_name) > 50:
+        response.status = 400
+        return dict(msg='Display name is too long (Maximum 50 characters')
+
+    #TODO no white spaces in username
+    user_name = data.get('user_name').strip()
+    if len(user_name) < 1:
         response.status = 400
         return dict(msg='Please enter a username')
+    if len(user_name) > 50:
+        response.status = 400
+        return dict(msg='Username is too long (Maximum 50 characters)')
 
-    user_email = data.get('email')
+    user_email = data.get('user_email')
     if not re.match(g.REGEX_EMAIL, user_email):
         response.status = 400
         return dict(msg='Please enter a valid email')
-    user_pwd = data.get('pwd')
+    user_pwd = data.get('user_pwd').strip()
     if len(user_pwd) < 6 or len(user_pwd) > 20:
         response.status = 400
         return dict(msg='Password must be longer than 6 or shorter than 20 characters')
@@ -201,19 +210,22 @@ def _():
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(bytes(user_pwd, 'utf_8'), salt).decode('utf-8')
 
-    #TODO send confirmation email
     try:
         validation = {
             'code': randint(100000, 999999),
             'url_snippet': str(uuid4())
         }
 
+        # TODO prettier with something like:
+        #   test_user = dict(**data)
+        #   print(test_user)
         user = dict(
             user_name=user_name,
             user_email=user_email,
             user_pwd=hashed)
-        db.user_post(user, validation)
 
+        details = dict(display_name=display_name)
+        db.user_post(user, validation, details)
         send_validation_email(validation['url_snippet'], validation['code'], user_name)
         return dict(url_snippet=validation['url_snippet'])
         
@@ -225,11 +237,6 @@ def _():
         elif str(e) == 'UNIQUE constraint failed: users.user_email':
             return dict(msg='That email is already in use')
 
-    return dict(
-                    user_name=user_name,
-                    user_email=user_email,
-                )
-
 @get('/logout')
 def _():
     response.delete_cookie("JWT", secret="secret_info")
@@ -239,7 +246,7 @@ def _():
 @view('email-validation')
 def _(url_code):
     try:
-        validation = json.loads(db.validation_get_by_url(url_code))
+        validation = db.validation_get_by_url(url_code)
         return dict(user_name=validation['user_name'], user_email=validation['user_email'], confirmation_url=url_code)
     except Exception as ex:
         traceback.print_exc()
@@ -260,9 +267,10 @@ def _(url_code):
 
 @post('/auth/<url_code>')
 def _(url_code):
-    data = json.load(request.body)   
+    # time.sleep(3)
+    data = json.load(request.body)
     try:
-        confirmation = json.loads(db.validation_get_by_url(url_code))
+        confirmation = db.validation_get_by_url(url_code)
         if confirmation:
             if confirmation['validation_code'] == int(data['code']):
                 db.validation_delete(dict(user_email=data['user_email']))

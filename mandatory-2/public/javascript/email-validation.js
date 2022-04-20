@@ -97,11 +97,13 @@ in1.addEventListener('input', splitNumber);
 
 document.getElementById('validation-form').addEventListener('submit', async function(e) {
     e.preventDefault();
+    toggle_spinner();
     remove_errors('login_error_prompt');
     
     let code = ""
     for (let input of document.querySelectorAll('input[type=number]')){
         code += input.value;
+        input.value = '';
     };
 
     const data = {
@@ -133,6 +135,7 @@ document.getElementById('validation-form').addEventListener('submit', async func
         error_prompt.innerHTML = body.msg;
         document.getElementById('error-container').prepend(error_prompt)
     }
+    toggle_spinner();
 });
 
 document.querySelector('#resend-btn').addEventListener('click', async (e) => {

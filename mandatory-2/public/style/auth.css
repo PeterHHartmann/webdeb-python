@@ -87,12 +87,12 @@ a {
   padding: 0;
   margin: 0;
 }
-.validation-main .validation-container .otc fieldset div {
+.validation-main .validation-container .otc fieldset > .code-inputs {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.validation-main .validation-container .otc fieldset div:before {
+.validation-main .validation-container .otc fieldset > .code-inputs:before {
   content: "";
   height: 2px;
   width: 1vw;

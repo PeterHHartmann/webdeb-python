@@ -18,9 +18,10 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
     remove_errors('signup_error_prompt');
     console.log('signup confirm clicked');
     const data = {
-        username: document.getElementById('signup-username').value,
-        email: document.getElementById('signup-email').value,
-        pwd: document.getElementById('signup-password').value
+        display_name: document.getElementById('signup-displayname').value,
+        user_name: document.getElementById('signup-username').value,
+        user_email: document.getElementById('signup-email').value,
+        user_pwd: document.getElementById('signup-password').value
     }
     const response = await fetch('/signup', {
         method: 'POST',

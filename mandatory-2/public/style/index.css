@@ -173,10 +173,10 @@ a {
 .left-side .left-nav .auth-nav #logout-dropup {
   display: flex;
   justify-content: center;
-  padding: 1rem 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
 }
 .left-side .left-nav .auth-nav #logout-dropup a {
-  padding: 1rem 2rem;
+  padding: 0.5rem 1rem;
   border-radius: 2rem;
   font-size: 1rem;
   color: white;

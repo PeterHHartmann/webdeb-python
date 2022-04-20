@@ -327,6 +327,11 @@ a {
 }
 .profile-deck .profile-info {
   width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e6e6e6;
+}
+.profile-deck .profile-info > div:not(.profile-banner) {
+  padding: 0 1rem;
 }
 .profile-deck .profile-info .profile-banner {
   min-height: 5rem;
@@ -339,7 +344,6 @@ a {
 .profile-deck .profile-info .profile-picture {
   display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
   max-height: 5rem;
 }
 .profile-deck .profile-info .profile-picture img {
@@ -359,9 +363,6 @@ a {
   border-radius: 3rem;
   font-weight: 700;
 }
-.profile-deck .profile-info .profile-names {
-  padding: 0 1rem;
-}
 .profile-deck .profile-info .profile-names div {
   font-weight: 600;
   font-size: 1rem;
@@ -371,6 +372,26 @@ a {
   font-weight: 700;
   font-size: 1.1rem;
   color: black;
+}
+.profile-deck .profile-info .description {
+  margin: 1rem 0;
+  font-weight: 400;
+}
+.profile-deck .profile-info .extra-info {
+  color: #787878;
+  font-size: 1rem;
+  font-weight: 400;
+  display: flex;
+  gap: 0.7rem;
+}
+.profile-deck .profile-info .extra-info > div {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.profile-deck .profile-info .extra-info > div svg {
+  fill: #787878;
+  width: 1.2rem;
 }
 .right-side {
   display: flex;

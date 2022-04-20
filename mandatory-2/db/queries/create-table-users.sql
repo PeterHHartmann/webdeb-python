@@ -21,8 +21,10 @@ DROP TABLE IF EXISTS user_details;
 CREATE TABLE user_details (
     detail_id               INTEGER NOT NULL,
     user_name               TEXT UNIQUE NOT NULL,
-    detail_display_name      TEXT NOT NULL,
+    detail_display_name     TEXT NOT NULL,
     detail_description      TEXT,
+    detail_location         TEXT,
+    detail_joined_date      INTEGER,
     detail_pfp              BLOB,
     CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(user_name),
     PRIMARY KEY (detail_id AUTOINCREMENT)

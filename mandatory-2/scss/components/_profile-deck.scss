@@ -46,11 +46,18 @@
 
     .profile-info {
         width: 100%;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgb(230, 230, 230);
+
+        > div {
+            &:not(.profile-banner) {
+                padding: 0 1rem;
+            }
+        }
 
         .profile-banner {
             min-height: 5rem;
             max-height: 200px;
-            // background: white;
             overflow: hidden;
 
             img {
@@ -61,7 +68,6 @@
         .profile-picture {
             display: flex;
             justify-content: space-between;
-            padding: 0 1rem;
             max-height: 5rem;
             
             img {
@@ -86,7 +92,6 @@
         }
 
         .profile-names {
-            padding: 0 1rem;
             div {
                 font-weight: 600;
                 font-size: 1rem;
@@ -98,6 +103,31 @@
                 }
             }
         }
+
+        .description {
+            margin: 1rem 0;
+            font-weight: 400;
+        }
+
+        .extra-info {
+            color: rgb(120, 120, 120);
+            font-size: 1rem;
+            font-weight: 400;
+            display: flex;
+            gap: .7rem;
+
+            > div {
+                display: flex;
+                align-items: center;
+                gap: .2rem;
+
+                svg {
+                    fill: rgb(120, 120, 120);
+                    width: 1.2rem;
+                }
+            }
+        }
+
     }
 
     .profile-nav {

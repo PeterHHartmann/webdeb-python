@@ -143,7 +143,7 @@ document.querySelector('#resend-btn').addEventListener('click', async (e) => {
         user_name: document.getElementById('validation-user_name').value
     }
 
-    await fetch(`${location.pathname}?resend=true`, {
+    await fetch(`${location.pathname}/resend`, {
         method: 'POST',
         credentials: 'same-origin',
         mode: 'no-cors',

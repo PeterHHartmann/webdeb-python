@@ -19,8 +19,8 @@ def user_get(user):
 def user_post(user, validation):
     try:
         db = sqlite3.connect('db/database.sqlite')
-        db.execute('INSERT INTO users VALUES(:user_id, :user_name, :user_email, :user_pwd)', user)
-        db.execute('INSERT INTO email_validations(user_id, validation_url, validation_code) VALUES(:user_id, :validation_url, :validation_code)', dict(user_id=user['user_id'], validation_url=validation['url_snippet'], validation_code=validation['code']))
+        db.execute('INSERT INTO users(user_name, user_email, user_pwd) VALUES(:user_name, :user_email, :user_pwd)', user)
+        db.execute('INSERT INTO email_validations(user_email, validation_url, validation_code) VALUES(:user_email, :validation_url, :validation_code)', dict(user_email=user['user_email'], validation_url=validation['url_snippet'], validation_code=validation['code']))
         db.commit()
     finally:
         db.close()
@@ -39,9 +39,9 @@ def validation_get_by_url(url):
                 email_validations.validation_code
             FROM users
             INNER JOIN email_validations 
-            ON email_validations.user_id=users.user_id 
+            ON email_validations.user_email=users.user_email
             WHERE validation_url=:validation_url;
-            ''', dict(validation_url=url)).fetchall())
+            ''', dict(validation_url=url)).fetchone())
         return validation
     finally:
         db.close()
@@ -60,7 +60,7 @@ def validation_get_by_email(email):
                 email_validations.validation_code
             FROM users
             INNER JOIN email_validations 
-            ON email_validations.user_id=users.user_id 
+            ON email_validations.user_email=users.user_email 
             WHERE users.user_email=?;
             ''', (email,)).fetchone())
         return validation
@@ -75,10 +75,10 @@ def validation_update_code(email, new_code):
             '''
             UPDATE email_validations
             SET validation_code=:validation_code
-            WHERE user_id IN (
-                SELECT e.user_id FROM email_validations e
+            WHERE user_email IN (
+                SELECT e.user_email FROM email_validations e
                 INNER JOIN users u 
-                ON (e.user_id=u.user_id)
+                ON (e.user_email=u.user_email)
                 WHERE u.user_email=:email
             );
             ''', dict(email=email, validation_code=new_code))
@@ -95,10 +95,10 @@ def validation_delete(user):
         db.execute(
             '''
             DELETE FROM email_validations
-            WHERE user_id IN (
-                SELECT e.user_id FROM email_validations e
+            WHERE user_email IN (
+                SELECT e.user_email FROM email_validations e
                 INNER JOIN users u 
-                ON (e.user_id=u.user_id)
+                ON (e.user_email=u.user_email)
                 WHERE u.user_email=:user_email
             );
             ''', user)

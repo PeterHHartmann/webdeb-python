@@ -1,4 +1,3 @@
-import time
 from dotenv import load_dotenv
 load_dotenv()
 from uuid import uuid4
@@ -77,8 +76,8 @@ def send_validation_email(url, code, user_name):
         try:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message.as_string())
-        except Exception as ex:
-            print("ex")
+        except:
+            traceback.print_exc()
 
 ### static file routes
 @get('/style/<stylesheet_name>')
@@ -143,15 +142,20 @@ def _():
 
     try:
         result = json.loads(db.user_get(dict(user_email=input_email)))
+
+        # check if input pwd doesn't match db password
         if not bcrypt.checkpw(bytes(input_pwd, 'utf-8'), bytes(result.get('user_pwd'), 'utf-8')):
             response.status = 401
             return dict(msg='Invalid email or password')
+        # otherwise proceed with login process
         else:
             payload = {
                 "user_name": result.get('user_name'),
                 "user_email": result.get('user_email')
             }
             try:
+                # check if user has validated their email 
+                # if they haven't return redirect url with error code 403: Forbidden
                 validation = json.loads(db.validation_get_by_email(input_email))
                 if validation:
                     payload['status'] = {'verified': False, 'url_snippet': validation['validation_url']}
@@ -160,11 +164,11 @@ def _():
                     return dict(url_snippet=validation['validation_url'])
             except:
                 traceback.print_exc()
+
             set_JWT(payload)
             return
     except:
         traceback.print_exc()
-        print("didn't find user")
         response.status = 401
         return dict(msg='Invalid email or password')
 
@@ -179,7 +183,6 @@ def _():
 
 @post('/signup')
 def _():
-    user_id = str(uuid4())
     data = json.load(request.body)
     user_name = data.get('username')
     if len(user_name.strip()) < 1:
@@ -206,7 +209,6 @@ def _():
         }
 
         user = dict(
-            user_id=user_id,
             user_name=user_name,
             user_email=user_email,
             user_pwd=hashed)
@@ -216,7 +218,7 @@ def _():
         return dict(url_snippet=validation['url_snippet'])
         
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         response.status = 400
         if str(e) == 'UNIQUE constraint failed: users.user_name':
             return dict(msg='That username is taken')
@@ -237,40 +239,44 @@ def _():
 @view('email-validation')
 def _(url_code):
     try:
-        validation = json.loads(db.validation_get_by_url(url_code))[0]
+        validation = json.loads(db.validation_get_by_url(url_code))
         return dict(user_name=validation['user_name'], user_email=validation['user_email'], confirmation_url=url_code)
     except Exception as ex:
-        print(ex)
+        traceback.print_exc()
         return redirect('/signup')
+
+@post('/auth/<url_code>/resend')
+def _(url_code):
+    data = json.load(request.body)
+    try:
+        new_code = randint(100000, 999999)
+        db.validation_update_code(data['user_email'], new_code)
+        send_validation_email(url_code, new_code, data['user_name'])
+        return
+    except:
+        traceback.print_exc()
+        response.status = 500
+        return dict(msg='something went wrong sorry')
 
 @post('/auth/<url_code>')
 def _(url_code):
-    data = json.load(request.body)
-    resend = request.query.get('resend', None)
-    if resend:
-        try:
-            new_code = randint(100000, 999999)
-            db.validation_update_code(data['user_email'], new_code)
-            send_validation_email(url_code, new_code, data['user_name'])
-            return
-        except:
-            traceback.print_exc()
-            response.status = 500
-            return dict(msg='something went wrong sorry')
-
+    data = json.load(request.body)   
     try:
         confirmation = json.loads(db.validation_get_by_url(url_code))
-        if confirmation[0]:
-            if confirmation[0]['validation_code'] == int(data['code']):
+        if confirmation:
+            if confirmation['validation_code'] == int(data['code']):
                 db.validation_delete(dict(user_email=data['user_email']))
-                cookie = request.get_cookie("JWT", secret="secret_info")
-                if cookie:
+
+                # try to remove the email validation field on JWT on cookie
+                try:
+                    cookie = request.get_cookie("JWT", secret="secret_info")
                     parsed = json.loads(cookie)
                     data = jwt.decode(parsed, key="secret_jwt", algorithms=["HS256"])
                     del data['status']
                     encoded_jwt = jwt.encode(data, "secret_jwt", algorithm="HS256")
                     response.set_cookie("JWT", json.dumps(encoded_jwt), "secret_info")
-                return
+                finally:
+                    return
             else:
                 response.status = 401
                 return dict(msg='Wrong code please try again')

@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-    user_id     INTEGER NOT NULL,
-    user_name   TEXT UNIQUE NOT NULL,
-    user_email  TEXT UNIQUE NOT NULL,
-    user_pwd    TEXT NOT NULL,
+    user_id                 INTEGER NOT NULL,
+    user_name               TEXT UNIQUE NOT NULL,
+    user_email              TEXT UNIQUE NOT NULL,
+    user_pwd                TEXT NOT NULL,
     PRIMARY KEY(user_id AUTOINCREMENT)
 );
 
@@ -21,13 +21,21 @@ DROP TABLE IF EXISTS user_details;
 CREATE TABLE user_details (
     detail_id               INTEGER NOT NULL,
     user_name               TEXT UNIQUE NOT NULL,
-    detail_display_name     TEXT NOT NULL,
-    detail_description      TEXT,
-    detail_location         TEXT,
-    detail_joined_date      INTEGER,
-    detail_pfp              BLOB,
+    display_name            TEXT NOT NULL,
+    description             TEXT,
+    pfp                     BLOB,
     CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(user_name),
     PRIMARY KEY (detail_id AUTOINCREMENT)
+);
+
+DROP TABLE IF EXISTS joined_dates;
+CREATE TABLE joined_dates (
+    joined_id               INTEGER NOT NULL,
+    detail_id               INTEGER NOT NULL,
+    joined_year             INTEGER NOT NULL,
+    joined_month            TEXT NOT NULL,
+    CONSTRAINT fk_detail_id FOREIGN KEY (detail_id) REFERENCES details(detail_id)
+    PRIMARY KEY (joined_id AUTOINCREMENT)
 );
 
 -- ALTER TABLE users
@@ -36,8 +44,11 @@ CREATE TABLE user_details (
 INSERT INTO users(user_name, user_email, user_pwd) 
 VALUES('Tom', 'test@email.com', '$2b$12$r1XwsYlYdoqf7GC3i256aOajRcJ3AbWlUOPUJuERhJVUExKzH9Hq6');
 
-INSERT INTO user_details(user_name, detail_display_name) 
-VALUES('Tom', 'TomFromMyspace');
+INSERT INTO user_details(user_name, display_name, description) 
+VALUES('Tom', 'TomFromMyspace', 'yo');
+
+INSERT INTO joined_dates (detail_id, joined_year, joined_month) 
+VALUES (1, 2016, 'February');
 
 SELECT * FROM users;
 SELECT * FROM email_validations;

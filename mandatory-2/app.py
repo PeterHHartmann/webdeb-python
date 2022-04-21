@@ -1,6 +1,5 @@
-from http.client import NOT_FOUND
+from datetime import datetime
 import time
-from xml.dom import NOT_FOUND_ERR
 from dotenv import load_dotenv
 load_dotenv()
 import re, json, os, smtplib, ssl, traceback
@@ -150,7 +149,7 @@ def _():
             payload = {
                 'user_name': user['user_name'],
                 'user_email': user['user_email'],
-                'display_name': details['detail_display_name']
+                'display_name': details['display_name']
             }
             try:
                 # check if user has validated their email 
@@ -221,6 +220,8 @@ def _():
             'url_snippet': str(uuid4())
         }
 
+        print(validation['code'])
+
         # TODO prettier with something like:
         #   test_user = dict(**data)
         #   print(test_user)
@@ -229,7 +230,11 @@ def _():
             user_email=user_email,
             user_pwd=hashed)
 
-        details = dict(display_name=display_name)
+        now = datetime.now()
+        joined_month = now.strftime('%B')
+        joined_year = int(now.strftime('%Y'))
+        details = dict(display_name=display_name, joined_month=joined_month, joined_year=joined_year)
+
         db.user_post(user, validation, details)
         send_validation_email(validation['url_snippet'], validation['code'], user_name)
         return dict(url_snippet=validation['url_snippet'])
@@ -309,7 +314,7 @@ def _(user_name):
     try:
         user = db.user_get_by_username(user_name)
         details = db.details_get(user_name)
-        return dict(profile_user_name=user['user_name'], profile_display_name=details['detail_display_name'], **payload)
+        return dict(profile_user_name=user['user_name'], profile_display_name=details['display_name'], profile_joined_month=details['joined_month'], profile_joined_year=details['joined_year'], **payload)
     except:
         traceback.print_exc()
         response.status = 404

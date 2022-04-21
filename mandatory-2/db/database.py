@@ -28,9 +28,13 @@ def user_get_by_username(user_name):
 def user_post(user, validation, details):
     try:
         db = sqlite3.connect('db/database.sqlite')
-        db.execute('INSERT INTO users(user_name, user_email, user_pwd) VALUES(:user_name, :user_email, :user_pwd)', user)
-        db.execute('INSERT INTO email_validations(user_email, validation_url, validation_code) VALUES(:user_email, :validation_url, :validation_code)', dict(user_email=user['user_email'], validation_url=validation['url_snippet'], validation_code=validation['code']))
-        db.execute('INSERT INTO user_details(user_name, detail_display_name) VALUES(:user_name, :display_name)', dict(user_name=user['user_name'], display_name=details['display_name']))
+        cursor = db.cursor()
+        cursor.execute('INSERT INTO users(user_name, user_email, user_pwd) VALUES(:user_name, :user_email, :user_pwd)', user)
+        cursor.execute('INSERT INTO email_validations(user_email, validation_url, validation_code) VALUES(:user_email, :validation_url, :validation_code)', dict(user_email=user['user_email'], validation_url=validation['url_snippet'], validation_code=validation['code']))
+        cursor.execute('INSERT INTO user_details(user_name, display_name) VALUES(:user_name, :display_name)', dict(user_name=user['user_name'], display_name=details['display_name']))
+        last_id = cursor.lastrowid
+        print(last_id)
+        cursor.execute('INSERT INTO joined_dates(detail_id, joined_month, joined_year) VALUES(:detail_id, :joined_month, :joined_year)', dict(detail_id=cursor.lastrowid, joined_month=details['joined_month'], joined_year=details['joined_year']))
         db.commit()
     finally:
         db.close()
@@ -39,7 +43,13 @@ def details_get(user_name):
     try:
         db = sqlite3.connect('db/database.sqlite')
         db.row_factory = dict_factory
-        details = json.dumps(db.execute('SELECT * FROM user_details WHERE user_name=:user_name', dict(user_name=user_name)).fetchone())
+        details = json.dumps(db.execute('''
+            SELECT user_details.user_name, user_details.display_name, user_details.description, joined_dates.joined_year, joined_dates.joined_month
+            FROM user_details
+            INNER JOIN joined_dates
+            ON joined_dates.detail_id=user_details.detail_id
+            WHERE user_details.user_name=:user_name
+            ''', dict(user_name=user_name)).fetchone())
         return json.loads(details)
     finally:
         db.close()

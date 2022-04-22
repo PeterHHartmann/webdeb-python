@@ -42,7 +42,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
         error_prompt.id = 'login_error_prompt';
         error_prompt.classList.add('error_prompt');
         error_prompt.innerHTML = '* ' + body.msg;
-        document.getElementById('error-container').prepend(error_prompt)
+        document.getElementById('error-container').prepend(error_prompt);
+        document.getElementById('login-password').value = '';
     }
     toggle_spinner();
 });

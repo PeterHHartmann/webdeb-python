@@ -1,10 +1,12 @@
 from datetime import datetime
+from email.policy import default
 import time
+from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
 import re, json, os, smtplib, ssl, traceback
 from uuid import uuid4
-from bottle import error, get, post, redirect, request, response, run, static_file, view, TEMPLATE_PATH
+from bottle import error, get, post, redirect, request, response, run, static_file, view, TEMPLATE_PATH, abort
 import g
 import bcrypt
 import jwt
@@ -316,61 +318,63 @@ def _(user_name):
     try:
         user = db.user_get_by_username(user_name)
         details = db.details_get(user_name)
-        return dict(profile_user_name=user['user_name'], profile_display_name=details['display_name'], profile_bio=details.get('bio'), profile_joined_month=details['joined_month'], profile_joined_year=details['joined_year'], **payload)
+        print(details.get('bio'))
+        body = dict(
+            profile_user_name       =   user['user_name'], 
+            profile_display_name    =   details['display_name'], 
+            profile_bio             =   details['bio'],
+            profile_joined_month    =   details['joined_month'], 
+            profile_joined_year     =   details['joined_year'], 
+            **payload
+        )
+        return body
     except:
         traceback.print_exc()
-        response.status = 404
-        return ''
+        abort(404)
 
-@post('/edit/<user_name>/banner')
-def _(user_name):
-    details = {
-        'display_name': request.forms.get('display_name'),
-        'bio': request.forms.get('bio'),
-        'pfp': request.files.get('pfp').file.read(),
-        'banner': request.files.get('banner').file.read()
-    }
-
+@get('/user/<user_name>/<identifier>.jpg')
+def _(user_name, identifier):
     try:
-        db.banner_set(user_name, details)
+        user_images = db.details_get_images(user_name)
+        stream = BytesIO(user_images[str(identifier)])
+        bytes = stream.read()
+        response.set_header('Content-Type', 'image/jpeg')
+        return bytes
     except:
         traceback.print_exc()
+        abort(404)
 
-    # raw = image.read()
-    # file_name, file_extension = os.path.splitext(image.filename) # .png .jpeg .zip .mp4
-    # print(file_name)
-    # print(file_extension)
-
-    # # Validate extension
-    # if file_extension not in ('.png', '.jpeg', '.jpg'):
-    #     return 'image not allowed'
-
-    # # if file_extension == ".jpg": file_extension = ".jpeg":
-
-    # image_id = str(uuid.uuid4())
-    # # Create new image name
-    # image_name = f"{image_id}{file_extension}"
-    # print(image_name)
-    # # Save the image
-    # image.save(f"images/{image_name}")
-
-    # print('imghdr.what', imghdr.what)
-
-    # # Make sure that the image is actually a valid image
-    # # by readinf its mime type
-
-    # imghdr_extension = imghdr.what(f"images/{image_name}")
-    # if file_extension != f".{imghdr_extension}":
-    #     print('mmm... suspicious ... it is not really an image')
-    #     # remove the invalid image from the folder
-    #     os.remove(f'images/{image_name}')
-    #     return 'mmm... got you! It was not an image'
-    return dict(msg='hi')
-
-# @post('/user/edit/<user_name>')
-# def _(user_name):
-#     print(request.forms)
-#     return redirect(f'/user/user_name')
+@post('/user/edit/<user_name>')
+def _(user_name):
+    payload = get_JWT()
+    if not payload:
+        return redirect('/login')
+    if payload['user_name'] == user_name:
+        current_imgs = db.details_get_images(user_name)
+        pfp = request.files.get('pfp')
+        banner = request.files.get('banner')
+        details = {
+            'display_name': request.forms.get('display_name'),
+            'bio': request.forms.get('bio')
+        }
+        if pfp:
+            details['pfp'] = pfp.file.read()
+        else:
+            details['pfp'] = current_imgs['pfp']
+        if banner:
+            details['banner'] = banner.file.read()
+        else:
+            details['banner'] = current_imgs['banner']
+        try:
+            db.details_update(user_name, details)
+            return
+        except:
+            traceback.print_exc()
+            response.status = 500
+            return
+    else:
+        response.status = 403
+        return
 
 @error(404)
 @view('404')

@@ -54,7 +54,22 @@ def details_get(user_name):
     finally:
         db.close()
 
-def banner_set(user_name, details):
+def details_get_images(user_name):
+    try:
+        db = sqlite3.connect('db/database.sqlite')
+        db.row_factory = dict_factory
+        details = db.execute('''
+            SELECT user_details.pfp, user_details.banner
+            FROM user_details
+            INNER JOIN joined_dates
+            ON joined_dates.detail_id=user_details.detail_id
+            WHERE user_details.user_name=:user_name
+            ''', dict(user_name=user_name)).fetchone()
+        return details
+    finally:
+        db.close()
+
+def details_update(user_name, details):
     try:
         db = sqlite3.connect('db/database.sqlite')
         db.execute('''

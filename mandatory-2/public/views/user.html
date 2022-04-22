@@ -1,11 +1,11 @@
 % include('fragments/head', title='Home / Not Twitter', stylesheet='../style/index.css', script='../js/user.js')
 <body>
-    <section class="modal" id="modal-mount">
+    <section class="modal hidden" id="modal-mount">
         <div class="modal-content" id="signup-modal">
             <form id="edit-profile-form">
                 <div class="modal-header">
-                    <div id="close-btn">
-                        <button>
+                    <div >
+                        <button id="close-btn">
                             <svg viewBox="0 0 24 24"><g><path d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"></path></g></svg>
                         </button>
                         <span>Edit profile</span>
@@ -14,13 +14,7 @@
                 </div>
                 <div class="profile-images">
                     <div class="profile-banner">
-                        % try:
-                            {{ profile_banner }}
-                            <img id="current-banner" class="" src="/image/default-pfp.jpg" width="100%" height="200px">
-                        % except:
-                            <img id="current-banner" class="hidden" width="100%" height="200px">
-                            <div id="placeholder" class=""></div>
-                        % end
+                        <img id="current-banner" class="" src="{{f'/user/{profile_user_name}/banner.jpg'}}" width="100%" height="200px" onerror="this.src = '/image/default-banner.jpg'">
                         <div class="edit-img-container" id="edit-banner">
                             <div class="edit-img">
                                 <label for="banner-input">
@@ -31,7 +25,7 @@
                         </div>
                     </div>
                     <div class="profile-picture">
-                        <img id="current-pfp" src="/image/default-pfp.jpg" alt="">
+                        <img id="current-pfp" src="{{f'/user/{profile_user_name}/pfp.jpg'}}" alt="" onerror="this.src='/image/default-pfp.jpg'">
                         <div class="edit-img-container" id="edit-pfp">
                             <div class="edit-img">
                                 <label for="pfp-input">
@@ -44,17 +38,17 @@
                     <div class="edit-info-container">
                         <label for="edit-display-name">
                             <p>Name:</p>
-                            <input id="display_name_input" type="text" name="edit-display-name" value={{ profile_display_name }}>
+                            <input id="display_name_input" type="text" name="edit-display-name" value="{{ profile_display_name }}">
                         </label>
                         <label for="edit-bio">
                             <p>Bio:</p>
-                            % try:
-                                <input id="bio_input" type="text" name="edit-bio" value={{ profile_bio }}>
-                            % except:
+                            % if get('profile_bio') == None:
                                 <input id="bio_input" type="text" name="edit-bio">
+                            % else:
+                                <input id="bio_input" type="text" name="edit-bio" value="{{ profile_bio }}">
                             % end
                         </label>
-                        <input id="user_name_input" type="hidden" name="user_name" value={{ profile_user_name }}>
+                        <input id="user_name_input" type="hidden" name="user_name" value="{{ profile_user_name }}">
                     </div>
                 </div>
             </form>
@@ -73,16 +67,10 @@
             </div>
             <div class="profile-info">
                 <div class="profile-banner">
-                    % try:
-                        {{ profile_banner }}
-                        <img src="/image/default-pfp.jpg">
-                    % except:
-                        <img class="hidden">
-                        <div></div>
-                    % end
+                    <img id="current-banner" class="" src="{{f'/user/{profile_user_name}/banner.jpg'}}" width="100%" height="200px" onerror="this.src = '/image/default-banner.jpg'">
                 </div>
                 <div class="profile-picture">
-                    <img  src="/image/default-pfp.jpg" alt="">
+                    <img id="current-pfp" src="{{f'/user/{profile_user_name}/pfp.jpg'}}" onerror="this.src='/image/default-pfp.jpg'">
                     % if get('profile_user_name') == get('user_name'):
                         <button id="edit-profile">Edit profile</button>
                     % end
@@ -92,7 +80,9 @@
                     <div> @{{ profile_user_name }} </div>
                 </div>
                 <div class="bio">
-                    {{ profile_bio }}
+                    % if get('profile_bio'):
+                        {{ profile_bio }}
+                    % end
                 </div>
                 <div class="extra-info">
                     <div>

@@ -17,11 +17,6 @@ document.getElementById('modal-bg').addEventListener('click', (e) => {
     }
 });
 
-document.getElementById('auth-nav').addEventListener('click', (e) => {
-    document.getElementById('logout-dropup').classList.toggle('hidden');
-    document.getElementById('auth-nav').classList.toggle('activated');
-});
-
 window.addEventListener('load', () => {
     const toast = document.querySelector('toast')
     toast.classList.remove('hidden')

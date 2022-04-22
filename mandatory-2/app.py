@@ -13,6 +13,9 @@ from email.mime.multipart import MIMEMultipart
 from random import randint
 import db.database as db
 
+import uuid
+import imghdr
+
 TEMPLATE_PATH.insert(0, 'public/views')
 
 def set_JWT(payload):
@@ -145,7 +148,6 @@ def _():
         # check if input pwd doesn't match db password
         if bcrypt.checkpw(bytes(input['pwd'], 'utf-8'), bytes(user['user_pwd'], 'utf-8')):
             details = db.details_get(user_name=user['user_name'])
-            print(type(details))
             payload = {
                 'user_name': user['user_name'],
                 'user_email': user['user_email'],
@@ -305,7 +307,7 @@ def _(url_code):
         response.status = 500
         return dict(msg='Something went wrong, please try again later')
 
-@get('/profile/<user_name>')
+@get('/user/<user_name>')
 @view('user')
 def _(user_name):
     payload = get_JWT()
@@ -314,11 +316,61 @@ def _(user_name):
     try:
         user = db.user_get_by_username(user_name)
         details = db.details_get(user_name)
-        return dict(profile_user_name=user['user_name'], profile_display_name=details['display_name'], profile_joined_month=details['joined_month'], profile_joined_year=details['joined_year'], **payload)
+        return dict(profile_user_name=user['user_name'], profile_display_name=details['display_name'], profile_bio=details.get('bio'), profile_joined_month=details['joined_month'], profile_joined_year=details['joined_year'], **payload)
     except:
         traceback.print_exc()
         response.status = 404
         return ''
+
+@post('/edit/<user_name>/banner')
+def _(user_name):
+    details = {
+        'display_name': request.forms.get('display_name'),
+        'bio': request.forms.get('bio'),
+        'pfp': request.files.get('pfp').file.read(),
+        'banner': request.files.get('banner').file.read()
+    }
+
+    try:
+        db.banner_set(user_name, details)
+    except:
+        traceback.print_exc()
+
+    # raw = image.read()
+    # file_name, file_extension = os.path.splitext(image.filename) # .png .jpeg .zip .mp4
+    # print(file_name)
+    # print(file_extension)
+
+    # # Validate extension
+    # if file_extension not in ('.png', '.jpeg', '.jpg'):
+    #     return 'image not allowed'
+
+    # # if file_extension == ".jpg": file_extension = ".jpeg":
+
+    # image_id = str(uuid.uuid4())
+    # # Create new image name
+    # image_name = f"{image_id}{file_extension}"
+    # print(image_name)
+    # # Save the image
+    # image.save(f"images/{image_name}")
+
+    # print('imghdr.what', imghdr.what)
+
+    # # Make sure that the image is actually a valid image
+    # # by readinf its mime type
+
+    # imghdr_extension = imghdr.what(f"images/{image_name}")
+    # if file_extension != f".{imghdr_extension}":
+    #     print('mmm... suspicious ... it is not really an image')
+    #     # remove the invalid image from the folder
+    #     os.remove(f'images/{image_name}')
+    #     return 'mmm... got you! It was not an image'
+    return dict(msg='hi')
+
+# @post('/user/edit/<user_name>')
+# def _(user_name):
+#     print(request.forms)
+#     return redirect(f'/user/user_name')
 
 @error(404)
 @view('404')

@@ -5,7 +5,7 @@
     width: 100vw;
     height: 100vh;
 
-    .modal-background {
+    .modal-bg {
         position: absolute;
         inset: 0;
         background-color: rgba(0, 0, 0, 0.3);
@@ -16,9 +16,9 @@
     .modal-content {
         z-index: 11;
         position: relative;
-        background-color: aqua;
+        background-color: white;
         max-width: 600px;
-        margin: 15% auto;
+        margin: 7% auto;
         display: flex;
         flex-direction: column;
 
@@ -26,15 +26,15 @@
             color: black;
         }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 75%;
-            margin: auto;
+        // form {
+        //     display: flex;
+        //     flex-direction: column;
+        //     width: 75%;
+        //     margin: auto;
 
-            .error_prompt {
-                color: red;
-            }
-        }
+        //     .error_prompt {
+        //         color: red;
+        //     }
+        // }
     }
 }

@@ -22,8 +22,9 @@ CREATE TABLE user_details (
     detail_id               INTEGER NOT NULL,
     user_name               TEXT UNIQUE NOT NULL,
     display_name            TEXT NOT NULL,
-    description             TEXT,
+    bio                     TEXT,
     pfp                     BLOB,
+    banner                  BLOB,
     CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(user_name),
     PRIMARY KEY (detail_id AUTOINCREMENT)
 );
@@ -44,7 +45,7 @@ CREATE TABLE joined_dates (
 INSERT INTO users(user_name, user_email, user_pwd) 
 VALUES('Tom', 'test@email.com', '$2b$12$r1XwsYlYdoqf7GC3i256aOajRcJ3AbWlUOPUJuERhJVUExKzH9Hq6');
 
-INSERT INTO user_details(user_name, display_name, description) 
+INSERT INTO user_details(user_name, display_name, bio) 
 VALUES('Tom', 'TomFromMyspace', 'yo');
 
 INSERT INTO joined_dates (detail_id, joined_year, joined_month) 

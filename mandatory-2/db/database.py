@@ -44,13 +44,29 @@ def details_get(user_name):
         db = sqlite3.connect('db/database.sqlite')
         db.row_factory = dict_factory
         details = json.dumps(db.execute('''
-            SELECT user_details.user_name, user_details.display_name, user_details.description, joined_dates.joined_year, joined_dates.joined_month
+            SELECT user_details.user_name, user_details.display_name, user_details.bio, joined_dates.joined_year, joined_dates.joined_month
             FROM user_details
             INNER JOIN joined_dates
             ON joined_dates.detail_id=user_details.detail_id
             WHERE user_details.user_name=:user_name
             ''', dict(user_name=user_name)).fetchone())
         return json.loads(details)
+    finally:
+        db.close()
+
+def banner_set(user_name, details):
+    try:
+        db = sqlite3.connect('db/database.sqlite')
+        db.execute('''
+            UPDATE user_details
+            SET 
+            display_name=:display_name, 
+            bio=:bio, 
+            pfp=:pfp,
+            banner=:banner
+            WHERE user_name=:user_name;
+            ''', dict(user_name=user_name, **details))
+        db.commit()
     finally:
         db.close()
 
